@@ -1,0 +1,74 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+// datasource db {
+//   provider = "postgresql"
+//   url      = env("DATABASE_URL")
+// }
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+model User {
+  id        Int         @id @default(autoincrement())
+  firstName String
+  lastName  String
+  username  String      @unique
+  email     String?     @unique
+  phone     String
+  bi        String      @unique
+  profile   Profile     @relation(fields: [profileId], references: [id])
+  status    Status      @relation(fields: [statusId], references: [id])
+  password  String
+  avatarUrl String?
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  UserToken UserToken[]
+
+  profileId       Int
+  statusId        Int
+}
+
+model UserToken {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  device    String?
+  lastUsed  DateTime @default(now())
+  expiresAt DateTime
+  revoked   Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([token])
+  @@index([userId])
+}
+
+model Status {
+  id         Int        @id @default(autoincrement())
+  status     StatusEnum
+  updated_At DateTime   @updatedAt
+  ip_address String
+
+  User User[]
+}
+
+enum StatusEnum {
+  Online
+  Offline
+}
+
+model Profile {
+  id    Int          @id @default(autoincrement())
+  name  ProfileEnum  @unique
+  User  User[]
+}
+
+enum ProfileEnum {
+  Admin
+  Trabalhador
+  Cliente
+}

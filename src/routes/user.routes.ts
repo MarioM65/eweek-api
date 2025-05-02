@@ -8,32 +8,27 @@ export async function userRoutes(fastify: FastifyInstance) {
     schema: {
       body: {
         type: 'object',
-        required: ['firstName', 'lastName', 'username', 'phone', 'bi', 'password', 'profileId', 'statusId',"address", "exp","description", "profession"],
+        required: ['vc_pnome', 'vc_mnome', 'vc_unome', 'vc_telefone', 'vc_bi', 'password', 'vc_email'],
         properties: {
-          firstName: { type: 'string', minLength: 2 },
-          lastName: { type: 'string', minLength: 2 },
-          username: { type: 'string', minLength: 3 },
-          email: { type: 'string', format: 'email' },
-          phone: { type: 'string', minLength: 9 },
-          bi: { type: 'string', minLength: 14, maxLength: 14 },
+          vc_pnome: { type: 'string', minLength: 2 },
+          vc_mnome: { type: 'string', minLength: 2 },
+          vc_unome: { type: 'string', minLength: 2 },
+          vc_email: { type: 'string', format: 'email' },
+          vc_telefone: { type: 'string', minLength: 9 },
+          vc_bi: { type: 'string', minLength: 10, maxLength: 14 },
           password: { type: 'string', minLength: 6 },
-          profileId: { type: 'integer' },
-          statusId: { type: 'integer' },
-          address: {type:"string"}, // Adicionar essa linha
-          exp:{type:"integer"},
-          description: {type:"string"},
-          profession: {type:"string"},
+          img_perfil: { type: 'string' },  // Se quiser permitir imagem de perfil
         }
       }
     },
     handler: UserController.create
-  })
+  });
 
   // Listar todos os usuários (rota protegida)
   fastify.get('/users', {
     onRequest: [authenticateToken],
     handler: UserController.index
-  })
+  });
 
   // Buscar usuário pelo ID
   fastify.get<{ Params: { id: string } }>('/users/:id', {
@@ -48,7 +43,7 @@ export async function userRoutes(fastify: FastifyInstance) {
       }
     },
     handler: UserController.show
-  })
+  });
 
   // Atualizar usuário pelo ID
   fastify.put<{ Params: { id: string }; Body: any }>('/users/:id', {
@@ -64,20 +59,19 @@ export async function userRoutes(fastify: FastifyInstance) {
       body: {
         type: 'object',
         properties: {
-          firstName: { type: 'string', minLength: 2 },
-          lastName: { type: 'string', minLength: 2 },
-          username: { type: 'string', minLength: 3 },
-          email: { type: 'string', format: 'email' },
-          phone: { type: 'string', minLength: 9 },
-          bi: { type: 'string', minLength: 14, maxLength: 14 },
+          vc_pnome: { type: 'string', minLength: 2 },
+          vc_mnome: { type: 'string', minLength: 2 },
+          vc_unome: { type: 'string', minLength: 2 },
+          vc_email: { type: 'string', format: 'email' },
+          vc_telefone: { type: 'string', minLength: 9 },
+          vc_bi: { type: 'string', minLength: 10, maxLength: 14 },
           password: { type: 'string', minLength: 6 },
-          profileId: { type: 'integer' },
-          statusId: { type: 'integer' }
+          img_perfil: { type: 'string' },
         }
       }
     },
     handler: UserController.update
-  })
+  });
 
   // Deletar usuário pelo ID
   fastify.delete<{ Params: { id: string } }>('/users/:id', {
@@ -92,33 +86,37 @@ export async function userRoutes(fastify: FastifyInstance) {
       }
     },
     handler: UserController.delete
-  })
-  // Verificar se o username já existe
-fastify.get<{ Querystring: { username: string } }>('/users/checkusername', {
-  schema: {
-    querystring: {
-      type: 'object',
-      required: ['username'],
-      properties: {
-        username: { type: 'string', minLength: 3 }
-      }
-    }
-  },
-  handler: UserController.checkUsername
-});
+  });
 
-// Verificar se o email já existe
-fastify.get<{ Querystring: { email: string } }>('/users/checkemail', {
-  schema: {
-    querystring: {
-      type: 'object',
-      required: ['email'],
-      properties: {
-        email: { type: 'string', format: 'email' }
+  // Verificar se o email já existe
+  fastify.get<{ Querystring: { vc_email: string } }>('/users/checkemail', {
+    schema: {
+      querystring: {
+        type: 'object',
+        required: ['vc_email'],
+        properties: {
+          vc_email: { type: 'string', format: 'email' }
+        }
       }
-    }
-  },
-  handler: UserController.checkEmail
-});
+    },
+    handler: UserController.checkEmail
+  });
 
+  // Restaurar usuário
+  fastify.put<{ Params: { id: string } }>('/users/restore/:id', {
+    onRequest: [authenticateToken],
+    handler: UserController.restore
+  });
+
+  // Excluir usuário permanentemente
+  fastify.delete<{ Params: { id: string } }>('/users/purge/:id', {
+    onRequest: [authenticateToken],
+    handler: UserController.purge
+  });
+
+  // Listar usuários na lixeira (soft delete)
+  fastify.get('/users/trash', {
+    onRequest: [authenticateToken],
+    handler: UserController.trash
+  });
 }

@@ -6,6 +6,21 @@ import { authRoutes } from './src/routes/auth.routes'
 import { userRoutes } from './src/routes/user.routes'
 import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUi from '@fastify/swagger-ui';
+import { userSeguradoraRoutes } from './src/routes/userSeguradora.routes'
+import { seguradoraRoutes } from './src/routes/seguradora.routes'
+import { seguroRoutes } from './src/routes/seguro.routes'
+import { userSeguroRoutes } from './src/routes/userSeguro.routes'
+import { seguroSeguradoraRoutes } from './src/routes/seguroSeguradora.routes'
+import { itemRoutes } from './src/routes/item.routes'
+import { contatoEmergenciaRoutes } from './src/routes/contatoEmergencia.routes'
+import { servicoRoutes } from './src/routes/servico.routes'
+import { seguroServicoRoutes } from './src/routes/seguroServico.routes'
+import { seguradoraParceiroRoutes } from './src/routes/seguradoraParceiro.routes'
+import { parceiroRoutes } from './src/routes/parceiro.routes'
+import { acidenteRoutes } from './src/routes/acidente.routes'
+import { filialRoutes } from './src/routes/filial.routes'
+import { itemServicoRoutes } from './src/routes/itemServico.routes'
+import { parentescoRoutes } from './src/routes/parentesco.routes'
 
 declare module '@fastify/jwt' {
   interface FastifyJWT {
@@ -89,6 +104,22 @@ app.register((app, options, done) => {
   });
   app.register(authRoutes, { prefix: '/api/auth' })
   app.register(userRoutes, { prefix: '/api' })
+  app.register(userSeguradoraRoutes, { prefix: '/api' })
+  app.register(userSeguroRoutes, { prefix: '/api' })
+  app.register(seguradoraRoutes, { prefix: '/api' })
+  app.register(parceiroRoutes, { prefix: '/api' })
+  app.register(parentescoRoutes, { prefix: '/api' })
+  app.register(seguroSeguradoraRoutes, { prefix: '/api' })
+  app.register(seguradoraParceiroRoutes, { prefix: '/api' })
+  app.register(seguroServicoRoutes, { prefix: '/api' })
+  app.register(seguroRoutes, { prefix: '/api' })
+  app.register(itemRoutes, { prefix: '/api' })
+  app.register(filialRoutes, { prefix: '/api' })
+  app.register(acidenteRoutes, { prefix: '/api' })
+  app.register(itemServicoRoutes, { prefix: '/api' })
+  app.register(servicoRoutes, { prefix: '/api' })
+  app.register(contatoEmergenciaRoutes, { prefix: '/api' })
+
   done();
 });
 

@@ -1,5 +1,5 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
-import prisma from '../../lib/prisma';
+import prisma from '../../../plugins/prisma';
 import * as bcrypt from 'bcrypt';
 import { z } from 'zod';
 
@@ -10,25 +10,20 @@ const loginSchema = z.object({
 });
 interface JwtPayload {
   id: number;
-  email: string;
-  profile: string;
+  vc_email: string;
 }
 export class AuthController {
   static async login(request: FastifyRequest<{ Body: z.infer<typeof loginSchema> }>, reply: FastifyReply) {
   try {
-    const { credential, password, device } = loginSchema.parse(request.body);
+    const { credential, password } = loginSchema.parse(request.body);
 
     // Buscar usuário por email, username ou telefone, incluindo o perfil
     const user = await prisma.user.findFirst({
       where: {
         OR: [
-          { email: credential },
-          { username: credential },
-          { phone: credential }
+          { vc_email: credential },
+          { vc_telefone: credential }
         ]
-      },
-      include: {
-        profile: true, // Inclui o nome do perfil do usuário
       }
     });
 
@@ -52,7 +47,7 @@ export class AuthController {
     const token: string = await reply.jwtSign(
       {
         id: user.id,
-        email: user.email ?? ""
+        email: user.vc_email ?? ""
       },
       { expiresIn: "7d" }
     );
@@ -66,7 +61,6 @@ export class AuthController {
       data: {
         token,
         userId: user.id,
-        device: device || "unknown",
         expiresAt
       }
     });
@@ -77,12 +71,12 @@ export class AuthController {
         token,
         user: {
           id: user.id,
-          email: user.email,
-          username: user.username,
-          phone: user.phone,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          profile: user.profile.name.toString(), // Retorna o tipo de usuário
+          vc_email: user.vc_email,
+          vc_telefone: user.vc_telefone,
+          vc_pnome: user.vc_pnome,
+          vc_mnome: user.vc_mnome,
+          vc_unome: user.vc_unome,
+
         }
       }
     });

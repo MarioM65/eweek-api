@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
-import prisma from './src/lib/prisma'
+import prisma from './plugins/prisma'
 
 export const authenticateToken = async (request: FastifyRequest, reply: FastifyReply) => {
     try {

@@ -1,106 +1,104 @@
-import { PrismaClient } from "@prisma/client";
-import bcrypt from "bcrypt";
+import { PrismaClient } from '@prisma/client'
+import bcrypt from 'bcrypt'
 
-
-const prisma = new PrismaClient();
+const prisma = new PrismaClient()
 
 async function main() {
+  // Criptografando a senha
+  const hashedPassword = await bcrypt.hash("12345678", 10) // Substitua pela senha real
 
-  const hashedPassword = await bcrypt.hash("12345678", 10); // Substitua "admin123" pela senha real
-
-  console.log("🌱 Iniciando Seed...");
-
-  // Criando ou buscando Status "Online"
-  let statusOnline = await prisma.status.findUnique({
-    where: { id: 1 },
-  });
-
-  if (!statusOnline) {
-    statusOnline = await prisma.status.create({
-      data: { status: "Online", ip_address: "127.0.0.1" },
-    });
-  }
-
-  // Criando ou buscando Status "Offline"
-  let statusOffline = await prisma.status.findUnique({
-    where: { id: 2 },
-  });
-
-  if (!statusOffline) {
-    statusOffline = await prisma.status.create({
-      data: { status: "Offline", ip_address: "127.0.0.1" },
-    });
-  }
-
-  console.log("✅ Status criados!");
-
-  // Criando ou buscando Profile "Administrador"
-  let adminProfile = await prisma.profile.findUnique({
-    where: { id: 1 },
-  });
-
-  if (!adminProfile) {
-    adminProfile = await prisma.profile.create({
-      data: {
-        name: "Admin"
+  // Criando um usuário
+  const user = await prisma.user.create({
+    data: {
+      vc_pnome: 'Mário',
+      vc_mnome: 'José',
+      vc_unome: 'Silva',
+      vc_telefone: '923456789',
+      vc_bi: '1234567890',
+      vc_email: 'mario@example.com',
+      password: hashedPassword, // Usando a senha criptografada
+      img_perfil: 'https://link-da-imagem.com',
+      contatos: {
+        create: [
+          {
+            vc_nome: 'Mãe',
+            vc_telefone: '923123456',
+            parentesco: 'Mãe'
+          },
+          {
+            vc_nome: 'Pai',
+            vc_telefone: '923654321',
+            parentesco: 'Pai'
+          }
+        ]
       },
-    });
-  }
-
-  console.log("✅ Perfil Administrador criado!");
-  // Criando ou buscando Profile "Administrador"
-  let trabalhadorProfile = await prisma.profile.findUnique({
-    where: { id: 2 },
-  });
-
-  if (!trabalhadorProfile) {
-    trabalhadorProfile = await prisma.profile.create({
-      data: {
-        name: "Trabalhador"
+      veiculos: {
+        create: [
+          {
+            vc_matricula: 'ABC1234',
+            modelo: 'Modelo 1',
+            item: {
+              create: {
+                vc_nome: 'Carro de Teste',
+                txt_descricao: 'Veículo de teste',
+                tipo_item: 'Carro'
+              }
+            },
+            seguro: {
+              create: {
+                vc_nome: 'Seguro Vida',
+                fl_preco: 100.0,
+                txt_descricao: 'Seguro de vida',
+                usuarios: {
+                  create: [
+                    {
+                      user: {
+                        connect: { id: 1 }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ]
       },
-    });
-  }
-
-  console.log("✅ Perfil Trabalhador criado!");
-  // Criando ou buscando Profile "Administrador"
-  let clienteProfile = await prisma.profile.findUnique({
-    where: { id: 3 },
-  });
-
-  if (!clienteProfile) {
-    clienteProfile = await prisma.profile.create({
-      data: {
-        name: "Cliente"
+      seguros: {
+        create: [
+          {
+            seguro: {
+              create: {
+                vc_nome: 'Seguro Auto',
+                fl_preco: 200.0,
+                txt_descricao: 'Seguro para automóveis'
+              }
+            }
+          }
+        ]
       },
-    });
-  }
+      seguradoras: {
+        create: [
+          {
+            seguradora: {
+              create: {
+                vc_nome: 'Seguradora XYZ',
+                logo: 'https://logo.com',
+                txt_descricao: 'Seguradora renomada no mercado'
+              }
+            }
+          }
+        ]
+      }
+    }
+  })
 
-  console.log("✅ Perfil Cliente criado!");
-
-  // Criar Usuário Admin
-  await prisma.user.upsert({
-    where: { email: "admin@example.com" },
-    update: {},
-    create: {
-      firstName: "Admin",
-      lastName: "User",
-      username: "admin",
-      email: "admin@example.com",
-      phone: "900000000",
-      password: hashedPassword,
-      statusId: statusOnline.id,
-      bi: "123456789LA",
-      profileId: adminProfile.id, // Usando o ID do perfil criado acima
-    },
-  });
-
-  console.log("✅ Usuário Admin criado!");
+  console.log('Dados de exemplo inseridos!')
 }
 
 main()
-  .catch((e) => {
-    console.error("❌ Erro ao executar Seed:", e);
+  .catch(e => {
+    throw e
   })
   .finally(async () => {
-    await prisma.$disconnect();
-  });
+    await prisma.$disconnect()
+  })

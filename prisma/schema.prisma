@@ -1,42 +1,44 @@
 generator client {
   provider = "prisma-client-js"
-}
 
-// datasource db {
-//   provider = "postgresql"
-//   url      = env("DATABASE_URL")
-// }
+  }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-}
+  }
+
 model User {
-  id        Int         @id @default(autoincrement())
-  firstName String
-  lastName  String
-  username  String      @unique
-  email     String?     @unique
-  phone     String
-  bi        String      @unique
-  profile   Profile     @relation(fields: [profileId], references: [id])
-  status    Status      @relation(fields: [statusId], references: [id])
-  password  String
-  avatarUrl String?
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
+  id               Int                 @id @default(autoincrement())
+  vc_pnome         String
+  vc_mnome         String
+  vc_unome         String
+  vc_telefone      String
+  vc_bi            String
+  vc_email         String             @unique
+  password         String
+  img_perfil       String?
   UserToken UserToken[]
 
-  profileId       Int
-  statusId        Int
-}
+  contatos         ContatoEmergencia[]
+  veiculos         VeiculoInfo[]
+  seguros          UserSeguro[]
+  seguradoras      UserSeguradora[]
+  acidentes        Acidente[]         @relation("AcidentesDoUsuario")
+
+  // Relação de parentesco
+  parentescosUser1 Parentesco[]        @relation("ParentescoUser1")  // User1 no parentesco
+  parentescosUser2 Parentesco[]        @relation("ParentescoUser2")  // User2 no parentesco
+ createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime? // Nullable, só é preenchido quando o registro é "removido"
+  }
 
 model UserToken {
   id        Int      @id @default(autoincrement())
   token     String   @unique
   userId    Int
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  device    String?
   lastUsed  DateTime @default(now())
   expiresAt DateTime
   revoked   Boolean  @default(false)
@@ -46,29 +48,223 @@ model UserToken {
   @@index([token])
   @@index([userId])
 }
+model Parentesco {
+  id          Int      @id @default(autoincrement())
+  parentesco  String
+  user1Id     Int
+  user2Id     Int
 
-model Status {
-  id         Int        @id @default(autoincrement())
-  status     StatusEnum
-  updated_At DateTime   @updatedAt
-  ip_address String
+  user1       User     @relation("ParentescoUser1", fields: [user1Id], references: [id])
+  user2       User     @relation("ParentescoUser2", fields: [user2Id], references: [id])
 
-  User User[]
-}
+  @@unique([user1Id, user2Id]) // Garante que o par de usuários seja único
+ createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime? // Nullable, só é preenchido quando o registro é "removido"
+  }
 
-enum StatusEnum {
-  Online
-  Offline
-}
 
-model Profile {
-  id    Int          @id @default(autoincrement())
-  name  ProfileEnum  @unique
-  User  User[]
-}
+model ContatoEmergencia {
+  id           Int    @id @default(autoincrement())
+  vc_nome      String
+  vc_telefone  String
+  parentesco   String
+  user         User   @relation(fields: [userId], references: [id])
+  userId       Int
+ createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime? // Nullable, só é preenchido quando o registro é "removido"
+  }
 
-enum ProfileEnum {
-  Admin
-  Trabalhador
-  Cliente
-}
+model Seguro {
+  id            Int            @id @default(autoincrement())
+  vc_nome       String
+  fl_preco      Float
+  txt_descricao String
+  usuarios      UserSeguro[]
+  seguradoras   SeguroSeguradora[]
+  servicos      SeguroServico[]
+  veiculos      VeiculoInfo[]
+ createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime? // Nullable, só é preenchido quando o registro é "removido"
+  }
+
+model Seguradora {
+  id            Int                @id @default(autoincrement())
+  vc_nome       String
+  logo          String
+  txt_descricao String
+
+  filiais       Filial[]
+  parceiros     SeguradoraParceiro[]
+  seguros       SeguroSeguradora[]
+  usuarios      UserSeguradora[]
+ createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime? // Nullable, só é preenchido quando o registro é "removido"
+  }
+
+model Parceiro {
+  id            Int                @id @default(autoincrement())
+  vc_nome       String
+  logo          String
+  txt_descricao String
+
+  filiais       Filial[]
+  seguradoras   SeguradoraParceiro[]
+ createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime? // Nullable, só é preenchido quando o registro é "removido"
+  }
+
+model Filial {
+  id           Int         @id @default(autoincrement())
+  vc_nome      String
+  vc_telefone  String
+  fl_lat       Float
+  fl_lon       Float
+  bl_central   Boolean
+ vc_email         String @unique
+ password         String 
+  seguradora   Seguradora? @relation(fields: [seguradoraId], references: [id])
+  seguradoraId Int?
+
+  parceiro     Parceiro?   @relation(fields: [parceiroId], references: [id])
+  parceiroId   Int?
+ createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime? // Nullable, só é preenchido quando o registro é "removido"
+  }
+
+model Servico {
+  id            Int              @id @default(autoincrement())
+  vc_nome       String
+  txt_descricao String
+  seguros       SeguroServico[]
+  items         ItemServico[]
+ createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime? // Nullable, só é preenchido quando o registro é "removido"
+  }
+
+model Item {
+  id            Int             @id @default(autoincrement())
+  vc_nome       String
+  txt_descricao String
+  tipo_item     String
+  veiculo       VeiculoInfo?
+  servicos      ItemServico[]
+  acidentes     Acidente[]
+ createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime? // Nullable, só é preenchido quando o registro é "removido"
+  }
+
+model VeiculoInfo {
+  id           Int    @id @default(autoincrement())
+  vc_matricula String
+  modelo       String
+
+  item         Item   @relation(fields: [itemId], references: [id])
+  itemId       Int    @unique
+
+  user         User   @relation(fields: [userId], references: [id])
+  userId       Int
+
+  seguro       Seguro @relation(fields: [seguroId], references: [id])
+  seguroId     Int
+ createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime? // Nullable, só é preenchido quando o registro é "removido"
+  }
+
+model Acidente {
+  id            Int     @id @default(autoincrement())
+  data_hora     DateTime
+  localizacao   String
+  tipo          String
+  confirmado    Boolean
+  gravidade     String
+
+  item          Item    @relation(fields: [itemId], references: [id])
+  itemId        Int
+
+  usuario       User    @relation("AcidentesDoUsuario", fields: [usuarioId], references: [id])
+  usuarioId     Int
+ createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime? // Nullable, só é preenchido quando o registro é "removido"
+  }
+
+model UserSeguro {
+  userId   Int
+  seguroId Int
+  user     User   @relation(fields: [userId], references: [id])
+  seguro   Seguro @relation(fields: [seguroId], references: [id])
+
+  @@id([userId, seguroId])
+ createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime? // Nullable, só é preenchido quando o registro é "removido"
+  }
+
+model UserSeguradora {
+  userId       Int
+  seguradoraId Int
+  user         User       @relation(fields: [userId], references: [id])
+  seguradora   Seguradora @relation(fields: [seguradoraId], references: [id])
+
+  @@id([userId, seguradoraId])
+ createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime? // Nullable, só é preenchido quando o registro é "removido"
+  }
+
+model SeguroSeguradora {
+  seguroId     Int
+  seguradoraId Int
+  seguro       Seguro     @relation(fields: [seguroId], references: [id])
+  seguradora   Seguradora @relation(fields: [seguradoraId], references: [id])
+
+  @@id([seguroId, seguradoraId])
+ createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime? // Nullable, só é preenchido quando o registro é "removido"
+  }
+
+model SeguroServico {
+  seguroId  Int
+  servicoId Int
+  seguro    Seguro  @relation(fields: [seguroId], references: [id])
+  servico   Servico @relation(fields: [servicoId], references: [id])
+
+  @@id([seguroId, servicoId])
+ createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime? // Nullable, só é preenchido quando o registro é "removido"
+  }
+
+model ItemServico {
+  itemId    Int
+  servicoId Int
+  item      Item    @relation(fields: [itemId], references: [id])
+  servico   Servico @relation(fields: [servicoId], references: [id])
+
+  @@id([itemId, servicoId])
+ createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime? // Nullable, só é preenchido quando o registro é "removido"
+  }
+
+model SeguradoraParceiro {
+  seguradoraId Int
+  parceiroId   Int
+  seguradora   Seguradora @relation(fields: [seguradoraId], references: [id])
+  parceiro     Parceiro   @relation(fields: [parceiroId], references: [id])
+
+  @@id([seguradoraId, parceiroId])
+ createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime? // Nullable, só é preenchido quando o registro é "removido"
+  }

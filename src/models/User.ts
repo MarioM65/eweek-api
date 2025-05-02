@@ -1,23 +1,17 @@
 import { z } from 'zod';
-import prisma from '../lib/prisma';
+import prisma from '../../plugins/prisma';
 import * as bcrypt from 'bcrypt';
 import { omit } from 'lodash';
 
 export const CreateUserSchema = z.object({
-  firstName: z.string().min(2, 'First name must be at least 2 characters'),
-  lastName: z.string().min(2, 'Last name must be at least 2 characters'),
-  username: z.string().min(3, 'Username must be at least 3 characters'),
-  email: z.string().email('Invalid email format').optional(),
-  phone: z.string().min(9, 'Phone must be at least 9 characters'),
-  bi: z.string().min(14, 'BI must be at least 14 characters'),
-  profileId: z.number(),
-  avatarUrl: z.string().optional(),
-  statusId: z.number(),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
-  address: z.string().optional(), // Adicionar essa linha
-  exp: z.string().optional(),
-  description: z.string().optional(),
-  profession: z.string().optional(),
+  vc_pnome: z.string().min(2),
+  vc_mnome: z.string().min(2),
+  vc_unome: z.string().min(2),
+  vc_email: z.string().email().optional(),
+  vc_telefone: z.string().min(9),
+  vc_bi: z.string().min(10),
+  password: z.string().min(6),
+  img_perfil: z.string().optional(),
 });
 
 export const UpdateUserSchema = CreateUserSchema.partial();
@@ -26,13 +20,13 @@ export type CreateUserInput = z.infer<typeof CreateUserSchema>;
 export type UpdateUserInput = z.infer<typeof UpdateUserSchema>;
 
 export class UserModel {
+
   static async create(data: CreateUserInput) {
     const hashedPassword = await bcrypt.hash(data.password, 10);
-
     return prisma.user.create({
       data: {
         ...data,
-        email: data.email ?? "",
+        vc_email: data.vc_email ?? "",
         password: hashedPassword,
       },
       select: this.defaultSelect(),
@@ -41,20 +35,20 @@ export class UserModel {
 
   static async findAll() {
     return prisma.user.findMany({
+      where: { deletedAt: null },
       select: this.defaultSelect(),
     });
   }
 
   static async findById(id: number) {
-    return prisma.user.findUnique({
-      where: { id },
+    return prisma.user.findFirst({
+      where: { id, deletedAt: null },
       select: this.defaultSelect(),
     });
   }
 
   static async update(id: number, data: UpdateUserInput) {
     const updateData: any = omit(data, 'password');
-
     if (data.password) {
       updateData.password = await bcrypt.hash(data.password, 10);
     }
@@ -63,42 +57,61 @@ export class UserModel {
       where: { id },
       data: {
         ...updateData,
-        email: data.email ?? undefined,
+        vc_email: data.vc_email ?? undefined,
       },
       select: this.defaultSelect(),
     });
   }
 
   static async delete(id: number) {
+    return prisma.user.update({
+      where: { id },
+      data: { deletedAt: new Date() },
+    });
+  }
+
+  static async trash() {
+    return prisma.user.findMany({
+      where: { deletedAt: { not: null } },
+      select: this.defaultSelect(),
+    });
+  }
+
+  static async restore(id: number) {
+    return prisma.user.update({
+      where: { id },
+      data: { deletedAt: null },
+      select: this.defaultSelect(),
+    });
+  }
+
+  static async purge(id: number) {
     return prisma.user.delete({
       where: { id },
     });
   }
 
-  static async checkUsernameExists(username: string) {
-    const user = await prisma.user.findUnique({ where: { username } });
-    return !!user;
-  }
-
-  static async checkEmailExists(email: string) {
-    const user = await prisma.user.findUnique({ where: { email } });
+  static async checkEmailExists(vc_email: string) {
+    const user = await prisma.user.findFirst({
+      where: { vc_email, deletedAt: null },
+    });
     return !!user;
   }
 
   private static defaultSelect() {
     return {
       id: true,
-      firstName: true,
-      lastName: true,
-      username: true,
-      email: true,
-      phone: true,
-      bi: true,
-      profileId: true,
-      statusId: true,
-      avatarUrl: true, // Adicionado aqui
+      vc_pnome: true,
+      vc_mnome: true,
+      vc_unome: true,
+      vc_telefone: true,
+      vc_bi: true,
+      vc_email: true,
+      img_perfil: true,
       createdAt: true,
       updatedAt: true,
+      deletedAt: true,
     };
   }
 }
+

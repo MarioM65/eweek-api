@@ -22,11 +22,23 @@ export type UpdateFilialInput = z.infer<typeof UpdateFilialSchema>;
 
 export class FilialModel {
   static async create(data: CreateFilialInput) {
-    return prisma.filial.create({
+    const novaFilial = await prisma.filial.create({
       data,
-      select: this.defaultSelect(),
     });
+  
+    // Criação da entidade
+    await prisma.entidade.create({
+      data: {
+        filialId:novaFilial.id,
+        vc_email: data.vc_email,
+        password: data.password,
+        vc_telefone: data.vc_telefone,
+      },
+    });
+  
+    return novaFilial;
   }
+  
 
   static async findAll() {
     return prisma.filial.findMany({

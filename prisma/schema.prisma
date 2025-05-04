@@ -110,7 +110,6 @@ model Parceiro {
   vc_nome       String
   logo          String
   txt_descricao String
-
   filiais       Filial[]
   seguradoras   SeguradoraParceiro[]
  createdAt  DateTime  @default(now())
@@ -118,24 +117,7 @@ model Parceiro {
   deletedAt  DateTime? // Nullable, só é preenchido quando o registro é "removido"
   }
 
-model Filial {
-  id           Int         @id @default(autoincrement())
-  vc_nome      String
-  vc_telefone  String
-  fl_lat       Float
-  fl_lon       Float
-  bl_central   Boolean
- vc_email         String @unique
- password         String 
-  seguradora   Seguradora? @relation(fields: [seguradoraId], references: [id])
-  seguradoraId Int?
 
-  parceiro     Parceiro?   @relation(fields: [parceiroId], references: [id])
-  parceiroId   Int?
- createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  deletedAt  DateTime? // Nullable, só é preenchido quando o registro é "removido"
-  }
 
 model Servico {
   id            Int              @id @default(autoincrement())
@@ -268,3 +250,52 @@ model SeguradoraParceiro {
   updatedAt  DateTime  @updatedAt
   deletedAt  DateTime? // Nullable, só é preenchido quando o registro é "removido"
   }
+model Filial {
+  id           Int         @id @default(autoincrement())
+  vc_nome      String
+  vc_telefone  String
+  fl_lat       Float
+  fl_lon       Float
+  Entidade     Entidade?   // lado oposto do 1:1
+  bl_central   Boolean
+  vc_email     String      @unique
+  password     String
+
+  seguradora   Seguradora? @relation(fields: [seguradoraId], references: [id])
+  seguradoraId Int?
+
+  parceiro     Parceiro?   @relation(fields: [parceiroId], references: [id])
+  parceiroId   Int?
+
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  deletedAt    DateTime?
+}
+
+model Entidade {
+  id             Int            @id @default(autoincrement())
+  vc_email       String         @unique
+  password       String
+  vc_telefone    String
+  EntidadeToken  EntidadeToken[]
+  Filial         Filial         @relation(fields: [filialId], references: [id], onDelete: Cascade)
+  filialId       Int            @unique
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  deletedAt      DateTime?
+}
+
+  model EntidadeToken {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  entidadeId    Int
+  Entidade      Entidade     @relation(fields: [entidadeId], references: [id])
+  lastUsed  DateTime @default(now())
+  expiresAt DateTime
+  revoked   Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([token])
+  @@index([entidadeId])
+}

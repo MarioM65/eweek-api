@@ -17,7 +17,19 @@ export async function authRoutes(fastify: FastifyInstance) {
     },
     handler: AuthController.login
   })
-  
+  fastify.post('/loginEntidade', {
+    schema: {
+      body: {
+        type: 'object',
+        required: ['credential', 'password'],
+        properties: {
+          credential: { type: 'string' },
+          password: { type: 'string' }
+        }
+      }
+    },
+    handler: AuthController.loginEntidade
+  })
 
   fastify.post('/logout', {
     onRequest: [authenticateToken],
@@ -31,5 +43,18 @@ export async function authRoutes(fastify: FastifyInstance) {
       }
     },
     handler: AuthController.logout
+  })
+  fastify.post('/logoutEntidade', {
+    onRequest: [authenticateToken],
+    schema: {
+      headers: {
+        type: 'object',
+        required: ['authorization'],
+        properties: {
+          authorization: { type: 'string' }
+        }
+      }
+    },
+    handler: AuthController.logoutEntidade
   })
 }

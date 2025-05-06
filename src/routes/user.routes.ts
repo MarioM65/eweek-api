@@ -44,6 +44,19 @@ export async function userRoutes(fastify: FastifyInstance) {
     },
     handler: UserController.show
   });
+  fastify.get<{ Params: { id: string } }>('/users/eu/:id', {
+    onRequest: [authenticateToken],
+    schema: {
+      params: {
+        type: 'object',
+        required: ['id'],
+        properties: {
+          id: { type: 'string' }
+        }
+      }
+    },
+    handler: UserController.meus_dados
+  });
 
   // Atualizar usuário pelo ID
   fastify.put<{ Params: { id: string }; Body: any }>('/users/:id', {

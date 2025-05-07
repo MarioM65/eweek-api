@@ -99,80 +99,13 @@ export class UserModel {
   }
   static async meus_dados(userId: number) {
     const usuario = await prisma.user.findUnique({
-      where: { id: userId },
-      include: {
-        UserToken: true,
-        notificacoes: true,
-        contatos: true,
-        veiculos: {
-          include: {
-            item: {
-              include: {
-                acidentes: true,
-                servicos: {
-                  include: {
-                    servico: true
-                  }
-                }
-              }
-            },
-            seguro: true
-          }
-        },
-        seguros: {
-          include: {
-            seguro: {
-              include: {
-                servicos: {
-                  include: {
-                    servico: true
-                  }
-                },
-                seguradoras: {
-                  include: {
-                    seguradora: true
-                  }
-                },
-                veiculos: true,
-                items: true
-              }
-            }
-          }
-        },
-        seguradoras: {
-          include: {
-            seguradora: {
-              include: {
-                parceiros: {
-                  include: {
-                    parceiro: true
-                  }
-                },
-                filiais: true
-              }
-            }
-          }
-        },
-        acidentes: true,
-        apolices: true,
-        parentescosUser1: {
-          include: {
-            user2: true
-          }
-        },
-        parentescosUser2: {
-          include: {
-            user1: true
-          }
-        },
-        recoveryTokens: true,
-        Chat: true,
-        Mensagem: true
-      }
+      where: { id: userId }
     });
+    
   
     return usuario;
   }
+  
   private static defaultSelect() {
     return {
       id: true,

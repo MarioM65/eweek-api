@@ -2,6 +2,8 @@ import { z } from 'zod';
 import prisma from '../../plugins/prisma';
 import * as bcrypt from 'bcrypt';
 import { omit } from 'lodash';
+import { UserSeguradoraModel } from './UserSeguradora';
+import { UserSeguroModel } from './UserSeguro';
 
 export const CreateUserSchema = z.object({
   vc_pnome: z.string().min(2),
@@ -101,10 +103,24 @@ export class UserModel {
     const usuario = await prisma.user.findUnique({
       where: { id: userId }
     });
-    
   
-    return usuario;
+    if (usuario) {
+      const [seguradora, seguros] = await Promise.all([
+        UserSeguradoraModel.findByUser(1),
+        UserSeguroModel.findByUser(1)
+      ]);
+  
+      // Retorna os dados agrupados
+      return {
+        usuario,
+        seguradora,
+        seguros
+      };
+    }
+  
+    return null;  // Caso o usuário não seja encontrado
   }
+  
   
   private static defaultSelect() {
     return {

@@ -32,7 +32,12 @@ export class UserSeguradoraModel {
         select: this.defaultSelect(),
       });
     }
-  
+    static async findByUser(userId: number) {
+      return prisma.userSeguradora.findFirst({
+        where: { userId, deletedAt: null },
+        select: this.defaultSelect(),
+      });
+    }
     static async delete(userId: number, seguradoraId: number) {
       return prisma.userSeguradora.update({
         where: { userId_seguradoraId: { userId, seguradoraId } },

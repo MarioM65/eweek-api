@@ -18,7 +18,12 @@ export class UserSeguroModel {
         select: this.defaultSelect(),
       });
     }
-  
+    static async findByUser(userId: number) {
+      return prisma.userSeguro.findFirst({
+        where: { userId, deletedAt: null },
+        select: this.defaultSelect(),
+      });
+    }
     static async findAll() {
       return prisma.userSeguro.findMany({
         where: { deletedAt: null },

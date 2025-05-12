@@ -1,0 +1,27 @@
+User                           user
+ UserToken                      auth
+ Parentesco                     parentesco
+ ContatoEmergencia              contatoEmergencia
+ Seguro                         seguro
+ Seguradora                    seguradora
+ Parceiro                      parceiro
+ Servico                       servico
+ Item                          item
+ VeiculoInfo                   veiculoInfo
+  Acidente                      acidente
+ UserSeguro                  userSeguro
+ UserSeguradora              userSeguradora
+ SeguroSeguradora             seguroSeguradora 
+ SeguroServico                seguroServico
+ ItemServico                 itemServico
+ SeguradoraParceiro           seguradoraParceiro
+ Filial                      filial
+    EntidadeToken             auth
+ RecoveryToken               auth
+ ItemInfo                    itemInfo
+ Entidade                      entidade
+ Pagamento                     pagamento
+ Apolice  
+ Notificacao 
+ Chat                        chat
+ Mensagem                    mensagem

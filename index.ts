@@ -21,6 +21,11 @@ import { acidenteRoutes } from './src/routes/acidente.routes'
 import { filialRoutes } from './src/routes/filial.routes'
 import { itemServicoRoutes } from './src/routes/itemServico.routes'
 import { parentescoRoutes } from './src/routes/parentesco.routes'
+import { itemInfoRoutes } from './src/routes/itemInfo.routes'
+import { entidadeRoutes } from './src/routes/entidade.routes'
+import { pagamentoRoutes } from './src/routes/pagamento.routes'
+import { chatRoutes } from './src/routes/chat.routes'
+import { mensagemRoutes } from './src/routes/mensagem.routes'
 
 declare module '@fastify/jwt' {
   interface FastifyJWT {
@@ -114,12 +119,16 @@ app.register((app, options, done) => {
   app.register(seguroServicoRoutes, { prefix: '/api' })
   app.register(seguroRoutes, { prefix: '/api' })
   app.register(itemRoutes, { prefix: '/api' })
+    app.register(itemInfoRoutes, { prefix: '/api' })
+      app.register(entidadeRoutes, { prefix: '/api' })
   app.register(filialRoutes, { prefix: '/api' })
   app.register(acidenteRoutes, { prefix: '/api' })
+  app.register( pagamentoRoutes, {prefix:'/api'})
   app.register(itemServicoRoutes, { prefix: '/api' })
   app.register(servicoRoutes, { prefix: '/api' })
+    app.register(chatRoutes, { prefix: '/api' })
   app.register(contatoEmergenciaRoutes, { prefix: '/api' })
-
+  app.register(mensagemRoutes, { prefix: '/api' })
   done();
 });
 

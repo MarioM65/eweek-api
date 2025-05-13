@@ -101,6 +101,18 @@ export class AcidenteController {
       return reply.code(500).send({ success: false, message: 'Internal server error', error: err.message || 'Unknown error' });
     }
   }
+    static async check(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
+    try {
+      const Acidente = await AcidenteModel.check(parseInt(request.params.id));
+      if (!Acidente) {
+        return reply.code(404).send({ success: false, message: 'Acidente not found' });
+      }
+      return reply.code(200).send({ success: true, data: Acidente });
+    } catch (error) {
+      const err = error as Error;
+      return reply.code(500).send({ success: false, message: 'Internal server error', error: err.message || 'Unknown error' });
+    }
+  }
 
   static async update(request: FastifyRequest<{ Params: { id: string }, Body: UpdateAcidenteInput }>, reply: FastifyReply) {
     try {

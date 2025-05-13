@@ -43,6 +43,19 @@ export async function acidenteRoutes(fastify: FastifyInstance) {
     },
     handler: AcidenteController.show
   });
+    fastify.get<{ Params: { id: string } }>('/acidentes/check/:id', {
+    onRequest: [authenticateToken],
+    schema: {
+      params: {
+        type: 'object',
+        required: ['id'],
+        properties: {
+          id: { type: 'string' }
+        }
+      }
+    },
+    handler: AcidenteController.check
+  });
 
   // Atualizar Acidente pelo ID
   fastify.put<{ Params: { id: string }; Body: any }>('/acidentes/:id', {

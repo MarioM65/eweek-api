@@ -84,6 +84,22 @@ await Promise.all(emails.map(email => enviarEmail(email)));
         select: this.defaultSelect(),
       });
     }
+static async check(id: number) {
+  return prisma.acidente.findFirst({
+    where: {
+      usuarioId: id,
+      deletedAt: null,
+      confirmado: true,
+      atendido: false,
+    },
+ orderBy: [
+  { updatedAt: 'desc' },
+  { createdAt: 'desc' },
+],
+    select: this.defaultSelect(),
+  });
+}
+
   
     static async update(id: number, data: UpdateAcidenteInput) {
       return prisma.acidente.update({

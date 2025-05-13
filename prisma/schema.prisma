@@ -200,7 +200,9 @@ model Acidente {
   data_hora     DateTime
   localizacao   String
   tipo          String
-  confirmado    Boolean
+  confirmado    Boolean @default(false)
+  atendido    Boolean @default(false)
+
   gravidade     String
 
   item          Item    @relation(fields: [itemId], references: [id])
@@ -336,7 +338,7 @@ model Entidade {
   @@index([entidadeId])
 }
 model Apolice {
-  id             String      @id @default(uuid())
+  id        Int      @id @default(autoincrement())
   numero         String      @unique
   valorMensal    Float
   dataInicio     DateTime
@@ -364,7 +366,7 @@ model Pagamento {
   dataPagamento DateTime
   estado       String    // Ex: "pago", "pendente", "atrasado", etc.
 
-  apoliceId    String
+  apoliceId    Int
   apolice      Apolice   @relation(fields: [apoliceId], references: [id])
 
      deletedAt      DateTime?
@@ -382,7 +384,7 @@ model Notificacao {
   userId    Int     // ID do usuário que recebeu a notificação
   user      User   @relation(fields: [userId], references: [id])
 
-  referenciaId String?    // Referência de algum recurso relacionado à notificação
+  referenciaId Int?    // Referência de algum recurso relacionado à notificação
   referencia   String?    // Pode ser uma descrição de qual recurso se refere, como "Pagamento", "Apolice", etc.
     deletedAt      DateTime?
      createdAt DateTime @default(now())

@@ -6,25 +6,18 @@ export async function acidenteRoutes(fastify: FastifyInstance) {
   // Criar uma nova Acidente
   fastify.post('/acidentes', {
     schema: {
-      body: {
+      body: {   
         type: 'object',
-        required: [
-          'vc_nome', 'tipo_Acidente', 'txt_descricao',
-          'data_hora', 'localizacao', 'tipo',
-          'confirmado', 'gravidade', 'itemId', 'usuarioId'
-        ],
-        properties: {
-          vc_nome: { type: 'string', minLength: 2 },
-          tipo_Acidente: { type: 'string' },
-          txt_descricao: { type: 'string' },
-          data_hora: { type: 'string', format: 'date-time' },
-          localizacao: { type: 'string', minLength: 2 },
-          tipo: { type: 'string', minLength: 2 },
-          confirmado: { type: 'boolean' },
-          gravidade: { type: 'string', minLength: 2 },
-          itemId: { type: 'number' },
-          usuarioId: { type: 'number' }
-        }
+ properties: {
+    tipo: { type: 'string' },
+    localizacao: { type: 'string' },
+    data_hora: { type: 'string', format: 'date-time' },
+    confirmado: { type: 'boolean' },
+    gravidade: { type: 'string' },
+    itemId: { type: 'number' },
+    usuarioId: { type: 'number' }
+  },
+  required: ['tipo', 'localizacao', 'data_hora', 'confirmado', 'gravidade', 'itemId', 'usuarioId']
       }
     },
     handler: AcidenteController.create
@@ -63,19 +56,7 @@ export async function acidenteRoutes(fastify: FastifyInstance) {
         }
       },
       body: {
-        type: 'object',
-        properties: {
-          vc_nome: { type: 'string', minLength: 2 },
-          tipo_Acidente: { type: 'string' },
-          txt_descricao: { type: 'string' },
-          data_hora: { type: 'string', format: 'date-time' },
-          localizacao: { type: 'string', minLength: 2 },
-          tipo: { type: 'string', minLength: 2 },
-          confirmado: { type: 'boolean' },
-          gravidade: { type: 'string', minLength: 2 },
-          itemId: { type: 'number' },
-          usuarioId: { type: 'number' }
-        }
+        type: 'object'
       }
     },
     handler: AcidenteController.update

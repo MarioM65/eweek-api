@@ -4,6 +4,7 @@ import prisma from '../../plugins/prisma';
 export const CreateContatoEmergenciaSchema = z.object({
   vc_nome: z.string().min(2),
   vc_telefone: z.string().min(9),
+    vc_email: z.string().min(9),
   parentesco: z.string().min(2),
   userId: z.number().min(1),
 });
@@ -74,8 +75,10 @@ export class ContatoEmergenciaModel {
       id: true,
       vc_nome: true,
       vc_telefone: true,
+      vc_email: true,
       parentesco: true,
       userId: true,
+       user: true,
       createdAt: true,
       updatedAt: true,
       deletedAt: true,

@@ -76,6 +76,12 @@ export class SeguroModel {
       fl_preco: true,
       txt_descricao: true,
       createdAt: true,
+       usuarios:true,
+       seguradoras:true,
+       servicos:true,
+        veiculos:true,
+       tems:true,
+       apolices:true,
       updatedAt: true,
       deletedAt: true,
     };

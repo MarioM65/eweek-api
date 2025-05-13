@@ -135,6 +135,18 @@ export class UserModel {
       createdAt: true,
       updatedAt: true,
       deletedAt: true,
+     notificacoes   : true,
+      contatos : true,
+      veiculos: true,
+      items: true,
+      seguros: true,
+      seguradoras: true,
+      acidentes: true,
+      apolices:true,
+      parentescosUser1:true,
+      parentescosUser2:true,
+      Chat :true,
+      Mensagem :true,
     };
   }
 }

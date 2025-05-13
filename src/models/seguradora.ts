@@ -79,6 +79,7 @@ export class SeguradoraModel {
         txt_descricao: true,
         filiais: true,
         parceiros: true,
+        apolices:true,
         seguros: true,
         usuarios: true,
         createdAt: true,

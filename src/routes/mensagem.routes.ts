@@ -14,7 +14,10 @@ export async function mensagemRoutes(fastify: FastifyInstance) {
         ],
         properties: {
           conteudo: { type: 'string', minLength: 2 },
-          dataEnvio: { type: 'date' },
+          dataEnvio: {
+  type: 'string',
+  format: 'date-time' // ou 'date', dependendo do que queres
+},
           chatId: { type: 'number' },
           userId: { type: 'number' },
           respostaId: { type: 'number' }

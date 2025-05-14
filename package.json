@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "ts-node index.ts",
     "build": "tsc",
-  "start": "prisma generate && node dist/index.js",
+  "start": "prisma generate && ts-node index.ts",
       "gen": "prisma generate",
     "migrate": "prisma migrate dev",
     "migrate:fresh": "prisma migrate reset",

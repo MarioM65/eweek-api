@@ -28,8 +28,6 @@ import { chatRoutes } from './src/routes/chat.routes'
 import { mensagemRoutes } from './src/routes/mensagem.routes'
 import { notificacaoRoutes } from './src/routes/notificacao.routes'
 import emailRoutes from './src/routes/email.routes'
-import twilioRoutes from './src/routes/twilio.routes'
-import smsRoutes from './src/routes/sms.routes'
 
 declare module '@fastify/jwt' {
   interface FastifyJWT {
@@ -135,8 +133,6 @@ app.register((app, options, done) => {
   app.register(mensagemRoutes, { prefix: '/api' })
     app.register(notificacaoRoutes, { prefix: '/api' })
     app.register(emailRoutes, { prefix: '/api' })
-    app.register(twilioRoutes, { prefix: '/api' })
-    app.register(smsRoutes, { prefix: '/api' })
 
   done();
 });

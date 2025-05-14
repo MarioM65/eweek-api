@@ -11,6 +11,7 @@ export async function contatoEmergenciaRoutes(fastify: FastifyInstance) {
         required: ['vc_nome', 'vc_telefone', 'parentesco'],
         properties: {
           vc_nome: { type: 'string', minLength: 2 },
+            vc_email: { type: 'string', minLength: 2 },
           vc_telefone: { type: 'string' },
           parentesco: { type: 'string' },
           userId: { type: 'integer' },
@@ -59,7 +60,7 @@ export async function contatoEmergenciaRoutes(fastify: FastifyInstance) {
           vc_telefone: { type: 'string' },
           parentesco: { type: 'string' },
           userId: { type: 'integer' },
-
+            vc_email: { type: 'string', minLength: 2 },
         }
       }
     },

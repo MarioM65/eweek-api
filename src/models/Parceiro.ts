@@ -1,12 +1,13 @@
 import { z } from 'zod';
 import prisma from '../../plugins/prisma';
-import { omit } from 'lodash';
 
 const defaultSelect = {
   id: true,
   vc_nome: true,
   logo: true,
   txt_descricao: true,
+  filiais:true,
+  seguradoras:true,
   createdAt: true,
   updatedAt: true,
   deletedAt: true,

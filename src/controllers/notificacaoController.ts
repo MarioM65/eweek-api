@@ -1,26 +1,25 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
-import { CreateAcidenteSchema, UpdateAcidenteSchema, CreateAcidenteInput, UpdateAcidenteInput } from '../models/Acidente';
-import { AcidenteModel } from '../models/Acidente';
 import { ZodError } from 'zod';
+import { NotificacaoModel, CreateNotificacaoInput, CreateNotificacaoSchema, UpdateNotificacaoInput, UpdateNotificacaoSchema } from '../models/Notificacao';
 
-export class AcidenteController {
+export class NotificacaoController {
   static async index(request: FastifyRequest, reply: FastifyReply) {
     try {
-      const Acidentes = await AcidenteModel.findAll();
-      return reply.code(200).send({ success: true, data: Acidentes });
+      const Notificacaos = await NotificacaoModel.findAll();
+      return reply.code(200).send({ success: true, data: Notificacaos });
     } catch (error) {
       const err = error as Error;
       return reply.code(500).send({ success: false, message: 'Internal server error', error: err.message || 'Unknown error' });
     }
   }
-  static async create(request: FastifyRequest<{ Body: CreateAcidenteInput }>, reply: FastifyReply) {
+  static async create(request: FastifyRequest<{ Body: CreateNotificacaoInput }>, reply: FastifyReply) {
     try {
-      const validatedData = CreateAcidenteSchema.parse(request.body);
-      const Acidente = await AcidenteModel.create(validatedData);
+      const validatedData = CreateNotificacaoSchema.parse(request.body);
+      const Notificacao = await NotificacaoModel.create(validatedData);
 
       // Criar uma carteira para o usuário (se for Cliente (3) ou Trabalhador(2))
     /*  if (validatedData.profileId === 3 || validatedData.profileId === 2) {
-        const carteira = await CarteiraModel.create({ AcidenteId: Acidente.id, credits: 0 });
+        const carteira = await CarteiraModel.create({ NotificacaoId: Notificacao.id, credits: 0 });
 
         if (validatedData.profileId === 2) {
           // Criar o cliente com o address e carteiraId
@@ -29,8 +28,8 @@ export class AcidenteController {
             walletId: carteira.id,
           });
 
-          // Relacionar o usuário ao cliente na tabela Acidente_cliente
-          await AcidenteClienteModel.create({ AcidenteId: Acidente.id, clientId: cliente.id });
+          // Relacionar o usuário ao cliente na tabela Notificacao_cliente
+          await NotificacaoClienteModel.create({ NotificacaoId: Notificacao.id, clientId: cliente.id });
         }
 
         if (validatedData.profileId === 2) {
@@ -44,12 +43,12 @@ export class AcidenteController {
             verified: false
           });
 
-          // Relacionar o usuário ao trabalhador na tabela Acidente_trabalhador
-          await AcidenteTrabalhadorModel.create({ AcidenteId: Acidente.id, workerId: trabalhador.id });
+          // Relacionar o usuário ao trabalhador na tabela Notificacao_trabalhador
+          await NotificacaoTrabalhadorModel.create({ NotificacaoId: Notificacao.id, workerId: trabalhador.id });
         }
       }*/
 
-      return reply.code(201).send({ success: true, data: Acidente });
+      return reply.code(201).send({ success: true, data: Notificacao });
     } catch (error) {
       if (error instanceof ZodError) {
         return reply.code(400).send({ success: false, message: 'Validation error', errors: error.errors });
@@ -60,10 +59,10 @@ export class AcidenteController {
   }
 
   // Novo endpoint para fazer upload da imagem e atualizar avatarUrl
-  /*static async uploadAvatar(request: FastifyRequest<{ Body: { AcidenteId: number } }>, reply: FastifyReply) {
+  /*static async uploadAvatar(request: FastifyRequest<{ Body: { NotificacaoId: number } }>, reply: FastifyReply) {
     try {
       const data = await request.file(); // Fastify-multipart deve estar configurado
-      const AcidenteId = Number(request.body.AcidenteId.toString());
+      const NotificacaoId = Number(request.body.NotificacaoId.toString());
 
       if (!data) {
         return reply.code(400).send({ success: false, message: 'No image uploaded' });
@@ -72,14 +71,14 @@ export class AcidenteController {
       // Upload no Cloudinary
       const buffer = await data.toBuffer();
       cloudinary.uploader.upload_stream(
-        { folder: 'Acidentes_avatars' },
+        { folder: 'Notificacaos_avatars' },
         async (error, cloudinaryResponse) => {
           if (error || !cloudinaryResponse) {
             return reply.code(500).send({ success: false, message: 'Error uploading image', error: error?.message });
           }
 
           // Atualizar o avatarUrl do usuário dentro do callback
-          await AcidenteModel.update(AcidenteId, { avatarUrl: cloudinaryResponse.secure_url });
+          await NotificacaoModel.update(NotificacaoId, { avatarUrl: cloudinaryResponse.secure_url });
 
           return reply.code(200).send({ success: true, avatarUrl: cloudinaryResponse.secure_url });
         }
@@ -91,34 +90,22 @@ export class AcidenteController {
 
   static async show(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
     try {
-      const Acidente = await AcidenteModel.findById(parseInt(request.params.id));
-      if (!Acidente) {
-        return reply.code(404).send({ success: false, message: 'Acidente not found' });
+      const Notificacao = await NotificacaoModel.findById(parseInt(request.params.id));
+      if (!Notificacao) {
+        return reply.code(404).send({ success: false, message: 'Notificacao not found' });
       }
-      return reply.code(200).send({ success: true, data: Acidente });
-    } catch (error) {
-      const err = error as Error;
-      return reply.code(500).send({ success: false, message: 'Internal server error', error: err.message || 'Unknown error' });
-    }
-  }
-    static async check(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
-    try {
-      const Acidente = await AcidenteModel.check(parseInt(request.params.id));
-      if (!Acidente) {
-        return reply.code(404).send({ success: false, message: 'Acidente not found' });
-      }
-      return reply.code(200).send({ success: true, data: Acidente });
+      return reply.code(200).send({ success: true, data: Notificacao });
     } catch (error) {
       const err = error as Error;
       return reply.code(500).send({ success: false, message: 'Internal server error', error: err.message || 'Unknown error' });
     }
   }
 
-  static async update(request: FastifyRequest<{ Params: { id: string }, Body: UpdateAcidenteInput }>, reply: FastifyReply) {
+  static async update(request: FastifyRequest<{ Params: { id: string }, Body: UpdateNotificacaoInput }>, reply: FastifyReply) {
     try {
-      const validatedData = UpdateAcidenteSchema.parse(request.body);
-      const Acidente = await AcidenteModel.update(parseInt(request.params.id), validatedData);
-      return reply.code(200).send({ success: true, data: Acidente });
+      const validatedData = UpdateNotificacaoSchema.parse(request.body);
+      const Notificacao = await NotificacaoModel.update(parseInt(request.params.id), validatedData);
+      return reply.code(200).send({ success: true, data: Notificacao });
     } catch (error) {
       if (error instanceof ZodError) {
         return reply.code(400).send({ success: false, message: 'Validation error', errors: error.errors });
@@ -129,8 +116,8 @@ export class AcidenteController {
   }
   static async restore(request: FastifyRequest<{ Params: { id: string }}>, reply: FastifyReply) {
     try {
-      const Acidente = await AcidenteModel.restore(parseInt(request.params.id));
-      return reply.code(200).send({ success: true , data: Acidente});
+      const Notificacao = await NotificacaoModel.restore(parseInt(request.params.id));
+      return reply.code(200).send({ success: true , data: Notificacao});
     } catch (error) {
       if (error instanceof ZodError) {
         return reply.code(400).send({ success: false, message: 'Validation error', errors: error.errors });
@@ -141,8 +128,8 @@ export class AcidenteController {
   }
   static async trash(request: FastifyRequest, reply: FastifyReply) {
     try {
-      const Acidentes = await AcidenteModel.trash();
-      return reply.code(200).send({ success: true, data: Acidentes });
+      const Notificacaos = await NotificacaoModel.trash();
+      return reply.code(200).send({ success: true, data: Notificacaos });
     } catch (error) {
       const err = error as Error;
       return reply.code(500).send({ success: false, message: 'Internal server error', error: err.message || 'Unknown error' });
@@ -150,8 +137,8 @@ export class AcidenteController {
   }
   static async delete(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
     try {
-      await AcidenteModel.delete(parseInt(request.params.id));
-      return reply.code(200).send({ success: true, message: 'Acidente deleted successfully' });
+      await NotificacaoModel.delete(parseInt(request.params.id));
+      return reply.code(200).send({ success: true, message: 'Notificacao deleted successfully' });
     } catch (error) {
       const err = error as Error;
       return reply.code(500).send({ success: false, message: 'Internal server error', error: err.message || 'Unknown error' });
@@ -159,8 +146,8 @@ export class AcidenteController {
   }
   static async purge(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
     try {
-      await AcidenteModel.purge(parseInt(request.params.id));
-      return reply.code(200).send({ success: true, message: 'Acidente purged successfully' });
+      await NotificacaoModel.purge(parseInt(request.params.id));
+      return reply.code(200).send({ success: true, message: 'Notificacao purged successfully' });
     } catch (error) {
       const err = error as Error;
       return reply.code(500).send({ success: false, message: 'Internal server error', error: err.message || 'Unknown error' });

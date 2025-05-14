@@ -12,8 +12,11 @@ export async function pagamentoRoutes(fastify: FastifyInstance) {
           'valor', 'dataPagamento', 'estado', 'apoliceId'
         ],
         properties: {
-          valor: { type: 'number', min: 0 },
-          dataPagamento: { type: 'date' },
+          valor: { type: 'number', minimum: 0 },
+          dataPagamento: {
+  type: 'string',
+  format: 'date-time' // ou 'date', dependendo do que queres
+},
           estado: { type: 'string' },
           apoliceId: { type: 'number' },
         }
@@ -57,8 +60,11 @@ export async function pagamentoRoutes(fastify: FastifyInstance) {
       body: {
         type: 'object',
         properties: {
-          valor: { type: 'number', min:0},
-          dataPagamento: { type: 'date' },
+          valor: { type: 'number', minimum:0},
+          dataPagamento: {
+  type: 'string',
+  format: 'date-time' // ou 'date', dependendo do que queres
+},
           estado: { type: 'string' },
           apoliceId: { type: 'number' },
         }

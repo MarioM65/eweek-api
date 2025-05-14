@@ -74,6 +74,8 @@ export class ParentescoModel {
       parentesco: true,
       user1Id: true,
       user2Id: true,
+      user1:true,
+      user2:true,
       createdAt: true,
       updatedAt: true,
       deletedAt: true,

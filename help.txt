@@ -21,7 +21,7 @@ User                           user
  ItemInfo                    itemInfo
  Entidade                      entidade
  Pagamento                     pagamento
- Apolice  
- Notificacao 
+ Apolice                               
+ Notificacao                  notificacao
  Chat                        chat
  Mensagem                    mensagem

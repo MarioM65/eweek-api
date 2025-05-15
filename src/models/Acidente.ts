@@ -9,6 +9,7 @@ export const CreateAcidenteSchema = z.object({
   confirmado: z.boolean(),
   gravidade: z.string(),
   itemId: z.number(),
+  atendido:z.boolean().optional(),
   usuarioId: z.number()
   });
   

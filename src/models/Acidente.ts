@@ -57,7 +57,15 @@ static async create(data: CreateAcidenteInput) {
 const dataHora = new Date(aci.data_hora);
 const dataFormatada = dataHora.toISOString().split('T')[0]; // "2025-05-13"
 const horaFormatada = dataHora.toTimeString().slice(0, 5);  // "14:30"
+const contactos = user?.contatos ?? [];
 
+const emailsContatos: EmailData[] = contactos.map(contato => ({
+  para: contato.vc_email ?? '', // caso seja opcional
+  user: user?.vc_pnome ?? 'Usuário desconhecido',
+  data: dataFormatada,
+  hora: horaFormatada,
+  localizacao: aci.localizacao,
+}));
 const emails: EmailData[] = usuariosParentes.map(parente => ({
   para: parente.vc_email,
   user: user?.vc_pnome ?? 'Usuário desconhecido',
@@ -67,7 +75,7 @@ const emails: EmailData[] = usuariosParentes.map(parente => ({
 }));
 console.log(emails)
 await Promise.all(emails.map(email => enviarEmail(email)));
-  return { aci, parentes: usuariosParentes, user, emails };
+  return { aci, parentes: usuariosParentes, user:user?.contatos, emails, contactos };
 }
 
 

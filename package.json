@@ -40,6 +40,7 @@
     "fastify-plugin": "^4.5.0",
     "lodash": "^4.17.21",
     "multer": "^1.4.5-lts.1",
+    "nodemailer": "^7.0.3",
     "pg": "^8.16.0",
     "zod": "^3.24.2"
   },
@@ -51,6 +52,7 @@
     "@types/jsonwebtoken": "^9.0.9",
     "@types/lodash": "^4.17.16",
     "@types/node": "^22.13.10",
+    "@types/nodemailer": "^6.4.17",
     "lodash": "^4.17.21",
     "prisma": "^6.7.0",
     "ts-node": "^10.9.2",

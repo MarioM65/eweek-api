@@ -65,6 +65,7 @@ const emails: EmailData[] = usuariosParentes.map(parente => ({
   hora: horaFormatada, // também string
   localizacao: aci.localizacao,
 }));
+console.log(emails)
 await Promise.all(emails.map(email => enviarEmail(email)));
   return { aci, parentes: usuariosParentes, user, emails };
 }

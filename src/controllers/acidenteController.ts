@@ -104,9 +104,6 @@ export class AcidenteController {
     static async check(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
     try {
       const Acidente = await AcidenteModel.check(parseInt(request.params.id));
-      if (!Acidente) {
-        return reply.code(404).send({ success: false, message: 'Acidente not found' });
-      }
       return reply.code(200).send({ success: true, data: Acidente });
     } catch (error) {
       const err = error as Error;

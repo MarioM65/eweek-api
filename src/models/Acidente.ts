@@ -50,7 +50,7 @@ static async create(data: CreateAcidenteInput) {
   });
 
   // Extrair parentes com seus e-mails
-  const usuariosParentes = parentescos.map(p => {
+  const usuariosParentes = parentescos.map((p: { user1Id: number; user2: any; user1: any; }) => {
     return p.user1Id === data.usuarioId ? p.user2 : p.user1;
   });
 
@@ -60,14 +60,14 @@ const dataFormatada = dataHora.toISOString().split('T')[0]; // "2025-05-13"
 const horaFormatada = dataHora.toTimeString().slice(0, 5);  // "14:30"
 const contactos = user?.contatos ?? [];
 
-const emailsContatos: EmailData[] = contactos.map(contato => ({
+const emailsContatos: EmailData[] = contactos.map((contato: { vc_email: any; }) => ({
   para: contato.vc_email ?? '', // caso seja opcional
   user: user?.vc_pnome ?? 'Usuário desconhecido',
   data: dataFormatada,
   hora: horaFormatada,
   localizacao: aci.localizacao,
 }));
-const emails: EmailData[] = usuariosParentes.map(parente => ({
+const emails: EmailData[] = usuariosParentes.map((parente: { vc_email: any; }) => ({
   para: parente.vc_email,
   user: user?.vc_pnome ?? 'Usuário desconhecido',
   data: dataFormatada, // agora é string
@@ -116,7 +116,7 @@ static async fake() {
   });
 
   // Extrair parentes com seus e-mails
-  const usuariosParentes = parentescos.map(p => {
+  const usuariosParentes = parentescos.map((p: { user1Id: number; user2: any; user1: any; }) => {
     return p.user1Id === data.usuarioId ? p.user2 : p.user1;
   });
 
@@ -126,14 +126,14 @@ const dataFormatada = dataHora.toISOString().split('T')[0]; // "2025-05-13"
 const horaFormatada = dataHora.toTimeString().slice(0, 5);  // "14:30"
 const contactos = user?.contatos ?? [];
 
-const emailsContatos: EmailData[] = contactos.map(contato => ({
+const emailsContatos: EmailData[] = contactos.map((contato: { vc_email: any; }) => ({
   para: contato.vc_email ?? '', // caso seja opcional
   user: user?.vc_pnome ?? 'Usuário desconhecido',
   data: dataFormatada,
   hora: horaFormatada,
   localizacao: aci.localizacao,
 }));
-const emails: EmailData[] = usuariosParentes.map(parente => ({
+const emails: EmailData[] = usuariosParentes.map((parente: { vc_email: any; }) => ({
   para: parente.vc_email,
   user: user?.vc_pnome ?? 'Usuário desconhecido',
   data: dataFormatada, // agora é string
@@ -158,21 +158,37 @@ await Promise.all(emails.map(email => enviarEmail(email)));
         select: this.defaultSelect(),
       });
     }
-static async check(id: number) {
-  return prisma.acidente.findFirst({
-    where: {
-      usuarioId: id,
-      deletedAt: null,
-      confirmado: true,
-      atendido: false,
-    },
- orderBy: [
-  { updatedAt: 'desc' },
-  { createdAt: 'desc' },
-],
-    select: this.defaultSelect(),
-  });
-}
+    static async check(id: number) {
+      let acidente = await prisma.acidente.findFirst({
+        where: {
+          usuarioId: id,
+          deletedAt: null,
+          confirmado: true,
+          atendido: false,
+          updatedAt: {
+            equals: prisma.acidente.fields.createdAt,
+          },
+        },
+        orderBy: [
+          { updatedAt: 'desc' },
+          { createdAt: 'desc' },
+        ],
+        select: this.defaultSelect(),
+      });
+      
+    
+      if (acidente) {
+        await prisma.acidente.update({
+          where: { id: acidente.id },
+          data: {
+            gravidade: acidente.gravidade + ' ',
+          },
+        });
+      }
+    
+      return acidente;
+    }
+    
 
   
     static async update(id: number, data: UpdateAcidenteInput) {

@@ -36,7 +36,7 @@ async function main() {
         vc_unome: 'Souza',
         vc_telefone: '+351923987654',
         vc_bi: '0987654321',
-        vc_email: 'ana.souza@example.com',
+        vc_email: 'mariomuondo65@gmail.com',
         password: await hashPassword('senha456'),
         img_perfil: 'https://example.com/perfil/ana.jpg',
         createdAt: new Date(),
@@ -52,7 +52,7 @@ async function main() {
         vc_unome: 'Oliveira',
         vc_telefone: '+351923123456',
         vc_bi: '1122334455',
-        vc_email: 'carlos.oliveira@example.com',
+        vc_email: 'mmystirio7@gmail.com',
         password: await hashPassword('senha789'),
         img_perfil: 'https://example.com/perfil/carlos.jpg',
         createdAt: new Date(),
@@ -541,6 +541,7 @@ async function main() {
       },
     }),
   ]);
+  
 
   // Criando notificações (corrigido referenciaId para String)
   await Promise.all([

@@ -47,9 +47,7 @@ export async function enviarEmail(data: EmailData) {
       subject: '🚨 Acidente Detectado - Sistema SDA',
       html,
     });
-    console.log('Email enviado com sucesso!');
   } catch (error:any) {
-    console.error('Erro ao enviar email:', error);
     throw new Error('Erro ao enviar email: ' + error.message);
   }
 }

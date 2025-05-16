@@ -212,7 +212,7 @@ model Acidente {
   usuario       User    @relation("AcidentesDoUsuario", fields: [usuarioId], references: [id])
   usuarioId     Int
  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+  updatedAt  DateTime?  @updatedAt
   deletedAt  DateTime? // Nullable, só é preenchido quando o registro é "removido"
   }
 

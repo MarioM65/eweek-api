@@ -96,7 +96,7 @@ export async function acidenteRoutes(fastify: FastifyInstance) {
   });
 
   // Listar Acidentes na lixeira
-  fastify.get('/acidentes/fake', {
+  fastify.get('/acidentes/trash', {
     handler: AcidenteController.trash
   });
     fastify.get('/acidentes/fake', {

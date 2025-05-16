@@ -20,13 +20,11 @@ export async function userSeguroRoutes(fastify: FastifyInstance) {
 
   // Listar todas as relações de usuários e seguros (rota protegida)
   fastify.get('/userSeguros', {
-    onRequest: [authenticateToken],
     handler: UserSeguroController.index
   });
 
   // Buscar relação entre usuário e seguro pelo ID
   fastify.get<{ Params: { userId: string, seguroId: string } }>('/userSeguros/:userId/:seguroId', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -43,7 +41,6 @@ export async function userSeguroRoutes(fastify: FastifyInstance) {
 
   // Deletar relação entre usuário e seguro pelo ID
   fastify.delete<{ Params: { userId: string, seguroId: string } }>('/userSeguros/:userId/:seguroId', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -59,19 +56,16 @@ export async function userSeguroRoutes(fastify: FastifyInstance) {
 
   // Restaurar relação entre usuário e seguro
   fastify.put<{ Params: { userId: string, seguroId: string } }>('/userSeguros/restore/:userId/:seguroId', {
-    onRequest: [authenticateToken],
     handler: UserSeguroController.restore
   });
 
   // Excluir permanentemente a relação entre usuário e seguro
   fastify.delete<{ Params: { userId: string, seguroId: string } }>('/userSeguros/purge/:userId/:seguroId', {
-    onRequest: [authenticateToken],
     handler: UserSeguroController.purge
   });
 
   // Listar relações de usuários e seguros na lixeira (soft delete)
   fastify.get('/userSeguros/trash', {
-    onRequest: [authenticateToken],
     handler: UserSeguroController.trash
   });
 }

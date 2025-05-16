@@ -35,13 +35,11 @@ export async function filialRoutes(fastify: FastifyInstance) {
 
   // Listar todas as Filials
   fastify.get('/filials', {
-    onRequest: [authenticateToken],
     handler: FilialController.index
   })
 
   // Buscar Filial pelo ID
   fastify.get<{ Params: { id: string } }>('/filials/:id', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -56,7 +54,6 @@ export async function filialRoutes(fastify: FastifyInstance) {
 
   // Atualizar Filial pelo ID
   fastify.put<{ Params: { id: string }; Body: any }>('/filials/:id', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -85,7 +82,6 @@ export async function filialRoutes(fastify: FastifyInstance) {
 
   // Deletar Filial pelo ID
   fastify.delete<{ Params: { id: string } }>('/filials/:id', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -100,19 +96,16 @@ export async function filialRoutes(fastify: FastifyInstance) {
 
   // Restaurar Filial
   fastify.put<{ Params: { id: string } }>('/filials/restore/:id', {
-    onRequest: [authenticateToken],
     handler: FilialController.restore
   })
 
   // Excluir Filial permanentemente
   fastify.delete<{ Params: { id: string } }>('/filials/purge/:id', {
-    onRequest: [authenticateToken],
     handler: FilialController.purge
   })
 
   // Listar Filials na lixeira
   fastify.get('/filials/trash', {
-    onRequest: [authenticateToken],
     handler: FilialController.trash
   })
 }

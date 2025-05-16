@@ -21,13 +21,11 @@ export async function seguroRoutes(fastify: FastifyInstance) {
 
   // Listar todas as seguros
   fastify.get('/seguros', {
-    onRequest: [authenticateToken],
     handler: SeguroController.index
   });
 
   // Buscar seguro pelo ID
   fastify.get<{ Params: { id: string } }>('/seguros/:id', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -42,7 +40,6 @@ export async function seguroRoutes(fastify: FastifyInstance) {
 
   // Atualizar seguro pelo ID
   fastify.put<{ Params: { id: string }; Body: any }>('/seguros/:id', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -65,7 +62,6 @@ export async function seguroRoutes(fastify: FastifyInstance) {
 
   // Deletar seguro pelo ID
   fastify.delete<{ Params: { id: string } }>('/seguros/:id', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -80,19 +76,16 @@ export async function seguroRoutes(fastify: FastifyInstance) {
 
   // Restaurar seguro
   fastify.put<{ Params: { id: string } }>('/seguros/restore/:id', {
-    onRequest: [authenticateToken],
     handler: SeguroController.restore
   });
 
   // Excluir seguro permanentemente
   fastify.delete<{ Params: { id: string } }>('/seguros/purge/:id', {
-    onRequest: [authenticateToken],
     handler: SeguroController.purge
   });
 
   // Listar seguros na lixeira
   fastify.get('/seguros/trash', {
-    onRequest: [authenticateToken],
     handler: SeguroController.trash
   });
 }

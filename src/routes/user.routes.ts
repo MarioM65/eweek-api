@@ -26,13 +26,11 @@ export async function userRoutes(fastify: FastifyInstance) {
 
   // Listar todos os usuários (rota protegida)
   fastify.get('/users', {
-    onRequest: [authenticateToken],
     handler: UserController.index
   });
 
   // Buscar usuário pelo ID
   fastify.get<{ Params: { id: string } }>('/users/:id', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -45,7 +43,6 @@ export async function userRoutes(fastify: FastifyInstance) {
     handler: UserController.show
   });
   fastify.get<{ Params: { id: string } }>('/users/eu/:id', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -60,7 +57,6 @@ export async function userRoutes(fastify: FastifyInstance) {
 
   // Atualizar usuário pelo ID
   fastify.put<{ Params: { id: string }; Body: any }>('/users/:id', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -88,7 +84,6 @@ export async function userRoutes(fastify: FastifyInstance) {
 
   // Deletar usuário pelo ID
   fastify.delete<{ Params: { id: string } }>('/users/:id', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -117,19 +112,16 @@ export async function userRoutes(fastify: FastifyInstance) {
 
   // Restaurar usuário
   fastify.put<{ Params: { id: string } }>('/users/restore/:id', {
-    onRequest: [authenticateToken],
     handler: UserController.restore
   });
 
   // Excluir usuário permanentemente
   fastify.delete<{ Params: { id: string } }>('/users/purge/:id', {
-    onRequest: [authenticateToken],
     handler: UserController.purge
   });
 
   // Listar usuários na lixeira (soft delete)
   fastify.get('/users/trash', {
-    onRequest: [authenticateToken],
     handler: UserController.trash
   });
 }

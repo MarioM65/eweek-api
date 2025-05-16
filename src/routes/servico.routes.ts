@@ -20,13 +20,11 @@ export async function servicoRoutes(fastify: FastifyInstance) {
 
   // Listar todas as servicos
   fastify.get('/servicos', {
-    onRequest: [authenticateToken],
     handler: ServicoController.index
   });
 
   // Buscar servico pelo ID
   fastify.get<{ Params: { id: string } }>('/servicos/:id', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -41,7 +39,6 @@ export async function servicoRoutes(fastify: FastifyInstance) {
 
   // Atualizar servico pelo ID
   fastify.put<{ Params: { id: string }; Body: any }>('/servicos/:id', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -63,7 +60,6 @@ export async function servicoRoutes(fastify: FastifyInstance) {
 
   // Deletar servico pelo ID
   fastify.delete<{ Params: { id: string } }>('/servicos/:id', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -78,19 +74,16 @@ export async function servicoRoutes(fastify: FastifyInstance) {
 
   // Restaurar servico
   fastify.put<{ Params: { id: string } }>('/servicos/restore/:id', {
-    onRequest: [authenticateToken],
     handler: ServicoController.restore
   });
 
   // Excluir servico permanentemente
   fastify.delete<{ Params: { id: string } }>('/servicos/purge/:id', {
-    onRequest: [authenticateToken],
     handler: ServicoController.purge
   });
 
   // Listar servicos na lixeira
   fastify.get('/servicos/trash', {
-    onRequest: [authenticateToken],
     handler: ServicoController.trash
   });
 }

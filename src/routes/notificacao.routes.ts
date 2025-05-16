@@ -33,13 +33,11 @@ export async function notificacaoRoutes(fastify: FastifyInstance) {
 
   // Listar todas as notificacaos
   fastify.get('/notificacaos', {
-    onRequest: [authenticateToken],
     handler: NotificacaoController.index
   });
 
   // Buscar notificacao pelo ID
   fastify.get<{ Params: { id: string } }>('/notificacaos/:id', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -54,7 +52,6 @@ export async function notificacaoRoutes(fastify: FastifyInstance) {
 
   // Atualizar notificacao pelo ID
   fastify.put<{ Params: { id: string }; Body: any }>('/notificacaos/:id', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -82,7 +79,6 @@ export async function notificacaoRoutes(fastify: FastifyInstance) {
 
   // Deletar notificacao pelo ID
   fastify.delete<{ Params: { id: string } }>('/notificacaos/:id', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -97,19 +93,16 @@ export async function notificacaoRoutes(fastify: FastifyInstance) {
 
   // Restaurar notificacao
   fastify.put<{ Params: { id: string } }>('/notificacaos/restore/:id', {
-    onRequest: [authenticateToken],
     handler: NotificacaoController.restore
   });
 
   // Excluir notificacao permanentemente
   fastify.delete<{ Params: { id: string } }>('/notificacaos/purge/:id', {
-    onRequest: [authenticateToken],
     handler: NotificacaoController.purge
   });
 
   // Listar notificacaos na lixeira
   fastify.get('/notificacaos/trash', {
-    onRequest: [authenticateToken],
     handler: NotificacaoController.trash
   });
 }

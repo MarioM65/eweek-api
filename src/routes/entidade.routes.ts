@@ -24,13 +24,11 @@ export async function entidadeRoutes(fastify: FastifyInstance) {
 
   // Listar todas as entidades
   fastify.get('/entidades', {
-    onRequest: [authenticateToken],
     handler: EntidadeController.index
   });
 
   // Buscar entidade pelo ID
   fastify.get<{ Params: { id: string } }>('/entidades/:id', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -45,7 +43,6 @@ export async function entidadeRoutes(fastify: FastifyInstance) {
 
   // Atualizar entidade pelo ID
   fastify.put<{ Params: { id: string }; Body: any }>('/entidades/:id', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -69,7 +66,6 @@ export async function entidadeRoutes(fastify: FastifyInstance) {
 
   // Deletar entidade pelo ID
   fastify.delete<{ Params: { id: string } }>('/entidades/:id', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -84,19 +80,16 @@ export async function entidadeRoutes(fastify: FastifyInstance) {
 
   // Restaurar entidade
   fastify.put<{ Params: { id: string } }>('/entidades/restore/:id', {
-    onRequest: [authenticateToken],
     handler: EntidadeController.restore
   });
 
   // Excluir entidade permanentemente
   fastify.delete<{ Params: { id: string } }>('/entidades/purge/:id', {
-    onRequest: [authenticateToken],
     handler: EntidadeController.purge
   });
 
   // Listar entidades na lixeira
   fastify.get('/entidades/trash', {
-    onRequest: [authenticateToken],
     handler: EntidadeController.trash
   });
 }

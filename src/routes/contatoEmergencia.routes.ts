@@ -23,13 +23,11 @@ export async function contatoEmergenciaRoutes(fastify: FastifyInstance) {
 
   // Listar todas as contatoEmergencias
   fastify.get('/contatoEmergencias', {
-    onRequest: [authenticateToken],
     handler: ContatoEmergenciaController.index
   });
 
   // Buscar contatoEmergencia pelo ID
   fastify.get<{ Params: { id: string } }>('/contatoEmergencias/:id', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -44,7 +42,6 @@ export async function contatoEmergenciaRoutes(fastify: FastifyInstance) {
 
   // Atualizar contatoEmergencia pelo ID
   fastify.put<{ Params: { id: string }; Body: any }>('/contatoEmergencias/:id', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -69,7 +66,6 @@ export async function contatoEmergenciaRoutes(fastify: FastifyInstance) {
 
   // Deletar contatoEmergencia pelo ID
   fastify.delete<{ Params: { id: string } }>('/contatoEmergencias/:id', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -84,19 +80,16 @@ export async function contatoEmergenciaRoutes(fastify: FastifyInstance) {
 
   // Restaurar contatoEmergencia
   fastify.put<{ Params: { id: string } }>('/contatoEmergencias/restore/:id', {
-    onRequest: [authenticateToken],
     handler: ContatoEmergenciaController.restore
   });
 
   // Excluir contatoEmergencia permanentemente
   fastify.delete<{ Params: { id: string } }>('/contatoEmergencias/purge/:id', {
-    onRequest: [authenticateToken],
     handler: ContatoEmergenciaController.purge
   });
 
   // Listar contatoEmergencias na lixeira
   fastify.get('/contatoEmergencias/trash', {
-    onRequest: [authenticateToken],
     handler: ContatoEmergenciaController.trash
   });
 }

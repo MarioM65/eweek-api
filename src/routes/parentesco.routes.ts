@@ -21,13 +21,11 @@ export async function parentescoRoutes(fastify: FastifyInstance) {
 
   // Listar todos os parentescos
   fastify.get('/parentescos', {
-    onRequest: [authenticateToken],
     handler: ParentescoController.index
   });
 
   // Buscar parentesco pelo ID
   fastify.get<{ Params: { id: string } }>('/parentescos/:id', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -42,7 +40,6 @@ export async function parentescoRoutes(fastify: FastifyInstance) {
 
   // Atualizar parentesco pelo ID
   fastify.put<{ Params: { id: string }; Body: any }>('/parentescos/:id', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -65,7 +62,6 @@ export async function parentescoRoutes(fastify: FastifyInstance) {
 
   // Deletar parentesco pelo ID
   fastify.delete<{ Params: { id: string } }>('/parentescos/:id', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -80,19 +76,16 @@ export async function parentescoRoutes(fastify: FastifyInstance) {
 
   // Restaurar parentesco
   fastify.put<{ Params: { id: string } }>('/parentescos/restore/:id', {
-    onRequest: [authenticateToken],
     handler: ParentescoController.restore
   });
 
   // Excluir parentesco permanentemente
   fastify.delete<{ Params: { id: string } }>('/parentescos/purge/:id', {
-    onRequest: [authenticateToken],
     handler: ParentescoController.purge
   });
 
   // Listar parentescos na lixeira
   fastify.get('/parentescos/trash', {
-    onRequest: [authenticateToken],
     handler: ParentescoController.trash
   });
 }

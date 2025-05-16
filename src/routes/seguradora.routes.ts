@@ -21,13 +21,11 @@ export async function seguradoraRoutes(fastify: FastifyInstance) {
 
   // Listar todas as seguradoras
   fastify.get('/seguradoras', {
-    onRequest: [authenticateToken],
     handler: SeguradoraController.index
   });
 
   // Buscar seguradora pelo ID
   fastify.get<{ Params: { id: string } }>('/seguradoras/:id', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -42,7 +40,6 @@ export async function seguradoraRoutes(fastify: FastifyInstance) {
 
   // Atualizar seguradora pelo ID
   fastify.put<{ Params: { id: string }; Body: any }>('/seguradoras/:id', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -65,7 +62,6 @@ export async function seguradoraRoutes(fastify: FastifyInstance) {
 
   // Deletar seguradora pelo ID
   fastify.delete<{ Params: { id: string } }>('/seguradoras/:id', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -80,19 +76,16 @@ export async function seguradoraRoutes(fastify: FastifyInstance) {
 
   // Restaurar seguradora
   fastify.put<{ Params: { id: string } }>('/seguradoras/restore/:id', {
-    onRequest: [authenticateToken],
     handler: SeguradoraController.restore
   });
 
   // Excluir seguradora permanentemente
   fastify.delete<{ Params: { id: string } }>('/seguradoras/purge/:id', {
-    onRequest: [authenticateToken],
     handler: SeguradoraController.purge
   });
 
   // Listar seguradoras na lixeira
   fastify.get('/seguradoras/trash', {
-    onRequest: [authenticateToken],
     handler: SeguradoraController.trash
   });
 }

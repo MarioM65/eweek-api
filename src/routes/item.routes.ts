@@ -21,13 +21,11 @@ export async function itemRoutes(fastify: FastifyInstance) {
 
   // Listar todas as Items
   fastify.get('/items', {
-    onRequest: [authenticateToken],
     handler: ItemController.index
   });
 
   // Buscar Item pelo ID
   fastify.get<{ Params: { id: string } }>('/items/:id', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -42,7 +40,6 @@ export async function itemRoutes(fastify: FastifyInstance) {
 
   // Atualizar Item pelo ID
   fastify.put<{ Params: { id: string }; Body: any }>('/items/:id', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -65,7 +62,6 @@ export async function itemRoutes(fastify: FastifyInstance) {
 
   // Deletar Item pelo ID
   fastify.delete<{ Params: { id: string } }>('/items/:id', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -80,19 +76,16 @@ export async function itemRoutes(fastify: FastifyInstance) {
 
   // Restaurar Item
   fastify.put<{ Params: { id: string } }>('/items/restore/:id', {
-    onRequest: [authenticateToken],
     handler: ItemController.restore
   });
 
   // Excluir Item permanentemente
   fastify.delete<{ Params: { id: string } }>('/items/purge/:id', {
-    onRequest: [authenticateToken],
     handler: ItemController.purge
   });
 
   // Listar Items na lixeira
   fastify.get('/items/trash', {
-    onRequest: [authenticateToken],
     handler: ItemController.trash
   });
 }

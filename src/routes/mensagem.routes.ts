@@ -29,13 +29,11 @@ export async function mensagemRoutes(fastify: FastifyInstance) {
 
   // Listar todas asMensagems
   fastify.get('/mensagems', {
-    onRequest: [authenticateToken],
     handler:MensagemController.index
   });
 
   // BuscarMensagem pelo ID
   fastify.get<{ Params: { id: string } }>('/mensagems/:id', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -50,7 +48,6 @@ export async function mensagemRoutes(fastify: FastifyInstance) {
 
   // AtualizarMensagem pelo ID
   fastify.put<{ Params: { id: string }; Body: any }>('/mensagems/:id', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -75,7 +72,6 @@ export async function mensagemRoutes(fastify: FastifyInstance) {
 
   // DeletarMensagem pelo ID
   fastify.delete<{ Params: { id: string } }>('/mensagems/:id', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -90,19 +86,16 @@ export async function mensagemRoutes(fastify: FastifyInstance) {
 
   // RestaurarMensagem
   fastify.put<{ Params: { id: string } }>('/mensagems/restore/:id', {
-    onRequest: [authenticateToken],
     handler:MensagemController.restore
   });
 
   // ExcluirMensagem permanentemente
   fastify.delete<{ Params: { id: string } }>('/mensagems/purge/:id', {
-    onRequest: [authenticateToken],
     handler:MensagemController.purge
   });
 
   // ListarMensagems na lixeira
   fastify.get('/mensagems/trash', {
-    onRequest: [authenticateToken],
     handler:MensagemController.trash
   });
 }

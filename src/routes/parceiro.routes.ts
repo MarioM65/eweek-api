@@ -21,13 +21,11 @@ export async function parceiroRoutes(fastify: FastifyInstance) {
 
   // Listar todas as parceiros
   fastify.get('/parceiros', {
-    onRequest: [authenticateToken],
     handler: ParceiroController.index
   });
 
   // Buscar parceiro pelo ID
   fastify.get<{ Params: { id: string } }>('/parceiros/:id', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -42,7 +40,6 @@ export async function parceiroRoutes(fastify: FastifyInstance) {
 
   // Atualizar parceiro pelo ID
   fastify.put<{ Params: { id: string }; Body: any }>('/parceiros/:id', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -65,7 +62,6 @@ export async function parceiroRoutes(fastify: FastifyInstance) {
 
   // Deletar parceiro pelo ID
   fastify.delete<{ Params: { id: string } }>('/parceiros/:id', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -80,19 +76,16 @@ export async function parceiroRoutes(fastify: FastifyInstance) {
 
   // Restaurar parceiro
   fastify.put<{ Params: { id: string } }>('/parceiros/restore/:id', {
-    onRequest: [authenticateToken],
     handler: ParceiroController.restore
   });
 
   // Excluir parceiro permanentemente
   fastify.delete<{ Params: { id: string } }>('/parceiros/purge/:id', {
-    onRequest: [authenticateToken],
     handler: ParceiroController.purge
   });
 
   // Listar parceiros na lixeira
   fastify.get('/parceiros/trash', {
-    onRequest: [authenticateToken],
     handler: ParceiroController.trash
   });
 }

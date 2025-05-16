@@ -20,13 +20,11 @@ export async function itemServicoRoutes(fastify: FastifyInstance) {
 
   // Listar todas as relações de usuários e servicos (rota protegida)
   fastify.get('/itemServicos', {
-    onRequest: [authenticateToken],
     handler: ItemServicoController.index
   });
 
   // Buscar relação entre usuário e servico pelo ID
   fastify.get<{ Params: { itemId: string, servicoId: string } }>('/itemServicos/:itemId/:servicoId', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -43,7 +41,6 @@ export async function itemServicoRoutes(fastify: FastifyInstance) {
 
   // Deletar relação entre usuário e servico pelo ID
   fastify.delete<{ Params: { itemId: string, servicoId: string } }>('/itemServicos/:itemId/:servicoId', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -59,19 +56,16 @@ export async function itemServicoRoutes(fastify: FastifyInstance) {
 
   // Restaurar relação entre usuário e servico
   fastify.put<{ Params: { itemId: string, servicoId: string } }>('/itemServicos/restore/:itemId/:servicoId', {
-    onRequest: [authenticateToken],
     handler: ItemServicoController.restore
   });
 
   // Excluir permanentemente a relação entre usuário e servico
   fastify.delete<{ Params: { itemId: string, servicoId: string } }>('/itemServicos/purge/:itemId/:servicoId', {
-    onRequest: [authenticateToken],
     handler: ItemServicoController.purge
   });
 
   // Listar relações de usuários e servicos na lixeira (soft delete)
   fastify.get('/itemServicos/trash', {
-    onRequest: [authenticateToken],
     handler: ItemServicoController.trash
   });
 }

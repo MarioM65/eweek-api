@@ -27,13 +27,11 @@ export async function pagamentoRoutes(fastify: FastifyInstance) {
 
   // Listar todas as pagamentos
   fastify.get('/pagamentos', {
-    onRequest: [authenticateToken],
     handler: PagamentoController.index
   });
 
   // Buscar pagamento pelo ID
   fastify.get<{ Params: { id: string } }>('/pagamentos/:id', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -48,7 +46,6 @@ export async function pagamentoRoutes(fastify: FastifyInstance) {
 
   // Atualizar pagamento pelo ID
   fastify.put<{ Params: { id: string }; Body: any }>('/pagamentos/:id', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -75,7 +72,6 @@ export async function pagamentoRoutes(fastify: FastifyInstance) {
 
   // Deletar pagamento pelo ID
   fastify.delete<{ Params: { id: string } }>('/pagamentos/:id', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -90,19 +86,16 @@ export async function pagamentoRoutes(fastify: FastifyInstance) {
 
   // Restaurar pagamento
   fastify.put<{ Params: { id: string } }>('/pagamentos/restore/:id', {
-    onRequest: [authenticateToken],
     handler: PagamentoController.restore
   });
 
   // Excluir pagamento permanentemente
   fastify.delete<{ Params: { id: string } }>('/pagamentos/purge/:id', {
-    onRequest: [authenticateToken],
     handler: PagamentoController.purge
   });
 
   // Listar pagamentos na lixeira
   fastify.get('/pagamentos/trash', {
-    onRequest: [authenticateToken],
     handler: PagamentoController.trash
   });
 }

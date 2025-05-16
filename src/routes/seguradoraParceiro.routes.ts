@@ -20,13 +20,11 @@ export async function seguradoraParceiroRoutes(fastify: FastifyInstance) {
 
   // Listar todas as relações de usuários e seguradoras (rota protegida)
   fastify.get('/seguradoraParceiros', {
-    onRequest: [authenticateToken],
     handler: SeguradoraParceiroController.index
   });
 
   // Buscar relação entre usuário e seguradora pelo ID
   fastify.get<{ Params: { parceiroId: string, seguradoraId: string } }>('/seguradoraParceiros/:parceiroId/:seguradoraId', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -43,7 +41,6 @@ export async function seguradoraParceiroRoutes(fastify: FastifyInstance) {
 
   // Deletar relação entre usuário e seguradora pelo ID
   fastify.delete<{ Params: { parceiroId: string, seguradoraId: string } }>('/seguradoraParceiros/:parceiroId/:seguradoraId', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -59,19 +56,16 @@ export async function seguradoraParceiroRoutes(fastify: FastifyInstance) {
 
   // Restaurar relação entre usuário e seguradora
   fastify.put<{ Params: { parceiroId: string, seguradoraId: string } }>('/seguradoraParceiros/restore/:parceiroId/:seguradoraId', {
-    onRequest: [authenticateToken],
     handler: SeguradoraParceiroController.restore
   });
 
   // Excluir permanentemente a relação entre usuário e seguradora
   fastify.delete<{ Params: { parceiroId: string, seguradoraId: string } }>('/seguradoraParceiros/purge/:parceiroId/:seguradoraId', {
-    onRequest: [authenticateToken],
     handler: SeguradoraParceiroController.purge
   });
 
   // Listar relações de usuários e seguradoras na lixeira (soft delete)
   fastify.get('/seguradoraParceiros/trash', {
-    onRequest: [authenticateToken],
     handler: SeguradoraParceiroController.trash
   });
 }

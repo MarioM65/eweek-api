@@ -32,7 +32,6 @@ export async function authRoutes(fastify: FastifyInstance) {
   })
 
   fastify.post('/logout', {
-    onRequest: [authenticateToken],
     schema: {
       headers: {
         type: 'object',
@@ -45,7 +44,6 @@ export async function authRoutes(fastify: FastifyInstance) {
     handler: AuthController.logout
   })
   fastify.post('/logoutEntidade', {
-    onRequest: [authenticateToken],
     schema: {
       headers: {
         type: 'object',

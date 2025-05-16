@@ -26,13 +26,11 @@ export async function VeiculoInfoRoutes(fastify: FastifyInstance) {
 
   // Listar todas as VeiculoInfos
   fastify.get('/veiculoInfos', {
-    onRequest: [authenticateToken],
     handler: VeiculoInfoController.index
   });
 
   // Buscar VeiculoInfo pelo ID
   fastify.get<{ Params: { id: string } }>('/veiculoInfos/:id', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -47,7 +45,6 @@ export async function VeiculoInfoRoutes(fastify: FastifyInstance) {
 
   // Atualizar VeiculoInfo pelo ID
   fastify.put<{ Params: { id: string }; Body: any }>('/veiculoInfos/:id', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -72,7 +69,6 @@ export async function VeiculoInfoRoutes(fastify: FastifyInstance) {
 
   // Deletar VeiculoInfo pelo ID
   fastify.delete<{ Params: { id: string } }>('/veiculoInfos/:id', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -87,19 +83,16 @@ export async function VeiculoInfoRoutes(fastify: FastifyInstance) {
 
   // Restaurar VeiculoInfo
   fastify.put<{ Params: { id: string } }>('/veiculoInfos/restore/:id', {
-    onRequest: [authenticateToken],
     handler: VeiculoInfoController.restore
   });
 
   // Excluir VeiculoInfo permanentemente
   fastify.delete<{ Params: { id: string } }>('/veiculoInfos/purge/:id', {
-    onRequest: [authenticateToken],
     handler: VeiculoInfoController.purge
   });
 
   // Listar VeiculoInfos na lixeira
   fastify.get('/veiculoInfos/trash', {
-    onRequest: [authenticateToken],
     handler: VeiculoInfoController.trash
   });
 }

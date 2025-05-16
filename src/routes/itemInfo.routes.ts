@@ -26,13 +26,11 @@ export async function itemInfoRoutes(fastify: FastifyInstance) {
 
   // Listar todas asItemInfos
   fastify.get('/itemInfos', {
-    onRequest: [authenticateToken],
     handler:ItemInfoController.index
   });
 
   // BuscarItemInfo pelo ID
   fastify.get<{ Params: { id: string } }>('/itemInfos/:id', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -47,7 +45,6 @@ export async function itemInfoRoutes(fastify: FastifyInstance) {
 
   // AtualizarItemInfo pelo ID
   fastify.put<{ Params: { id: string }; Body: any }>('/itemInfos/:id', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -72,7 +69,6 @@ export async function itemInfoRoutes(fastify: FastifyInstance) {
 
   // DeletarItemInfo pelo ID
   fastify.delete<{ Params: { id: string } }>('/itemInfos/:id', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -87,19 +83,16 @@ export async function itemInfoRoutes(fastify: FastifyInstance) {
 
   // RestaurarItemInfo
   fastify.put<{ Params: { id: string } }>('/itemInfos/restore/:id', {
-    onRequest: [authenticateToken],
     handler:ItemInfoController.restore
   });
 
   // ExcluirItemInfo permanentemente
   fastify.delete<{ Params: { id: string } }>('/itemInfos/purge/:id', {
-    onRequest: [authenticateToken],
     handler:ItemInfoController.purge
   });
 
   // ListarItemInfos na lixeira
   fastify.get('/itemInfos/trash', {
-    onRequest: [authenticateToken],
     handler:ItemInfoController.trash
   });
 }

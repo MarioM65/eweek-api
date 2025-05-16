@@ -22,13 +22,11 @@ export async function chatRoutes(fastify: FastifyInstance) {
 
   // Listar todas as chats
   fastify.get('/chats', {
-    onRequest: [authenticateToken],
     handler: ChatController.index
   });
 
   // Buscar chat pelo ID
   fastify.get<{ Params: { id: string } }>('/chats/:id', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -43,7 +41,6 @@ export async function chatRoutes(fastify: FastifyInstance) {
 
   // Atualizar chat pelo ID
   fastify.put<{ Params: { id: string }; Body: any }>('/chats/:id', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -65,7 +62,6 @@ export async function chatRoutes(fastify: FastifyInstance) {
 
   // Deletar chat pelo ID
   fastify.delete<{ Params: { id: string } }>('/chats/:id', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -80,19 +76,16 @@ export async function chatRoutes(fastify: FastifyInstance) {
 
   // Restaurar chat
   fastify.put<{ Params: { id: string } }>('/chats/restore/:id', {
-    onRequest: [authenticateToken],
     handler: ChatController.restore
   });
 
   // Excluir chat permanentemente
   fastify.delete<{ Params: { id: string } }>('/chats/purge/:id', {
-    onRequest: [authenticateToken],
     handler: ChatController.purge
   });
 
   // Listar chats na lixeira
   fastify.get('/chats/trash', {
-    onRequest: [authenticateToken],
     handler: ChatController.trash
   });
 }

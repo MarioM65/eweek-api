@@ -25,13 +25,11 @@ export async function acidenteRoutes(fastify: FastifyInstance) {
 
   // Listar todas as Acidentes
   fastify.get('/acidentes', {
-    onRequest: [authenticateToken],
     handler: AcidenteController.index
   });
 
   // Buscar Acidente pelo ID
   fastify.get<{ Params: { id: string } }>('/acidentes/:id', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -44,7 +42,6 @@ export async function acidenteRoutes(fastify: FastifyInstance) {
     handler: AcidenteController.show
   });
     fastify.get<{ Params: { id: string } }>('/acidentes/check/:id', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -59,7 +56,6 @@ export async function acidenteRoutes(fastify: FastifyInstance) {
 
   // Atualizar Acidente pelo ID
   fastify.put<{ Params: { id: string }; Body: any }>('/acidentes/:id', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -77,7 +73,6 @@ export async function acidenteRoutes(fastify: FastifyInstance) {
 
   // Deletar Acidente pelo ID
   fastify.delete<{ Params: { id: string } }>('/acidentes/:id', {
-    onRequest: [authenticateToken],
     schema: {
       params: {
         type: 'object',
@@ -92,19 +87,19 @@ export async function acidenteRoutes(fastify: FastifyInstance) {
 
   // Restaurar Acidente
   fastify.put<{ Params: { id: string } }>('/acidentes/restore/:id', {
-    onRequest: [authenticateToken],
     handler: AcidenteController.restore
   });
 
   // Excluir Acidente permanentemente
   fastify.delete<{ Params: { id: string } }>('/acidentes/purge/:id', {
-    onRequest: [authenticateToken],
     handler: AcidenteController.purge
   });
 
   // Listar Acidentes na lixeira
-  fastify.get('/acidentes/trash', {
-    onRequest: [authenticateToken],
+  fastify.get('/acidentes/fake', {
     handler: AcidenteController.trash
+  });
+    fastify.get('/acidentes/fake', {
+    handler: AcidenteController.fake
   });
 }

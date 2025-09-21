@@ -12,7 +12,7 @@ npm-debug.log*
 # Diretórios do sistema
 .DS_Store
 Thumbs.db
-
+.env
 # Builds
 dist/
 build/
